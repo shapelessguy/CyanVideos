@@ -81,7 +81,7 @@ namespace CyanVideos
                 Loading.Start();
                 Application.Run(win = new Window());
             }
-            catch (Exception ex) { MessageBox.Show("Errore: " + ex.Message); }
+            catch (Exception ex) { MessageBox.Show("Error: " + ex.Message + "\n" + ex.ToString()); }
         }
         public static void LOADING()
         {
