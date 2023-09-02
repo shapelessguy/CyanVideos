@@ -106,7 +106,6 @@ namespace CyanVideos
             this.addSourceSeries.ForeColor = System.Drawing.Color.White;
             this.addSourceSeries.Name = "addSourceSeries";
             this.addSourceSeries.Size = new System.Drawing.Size(293, 24);
-            this.addSourceSeries.Text = "Aggiungi fonte serieTV";
             this.addSourceSeries.Click += new System.EventHandler(this.AddSourceSeries);
             // 
             // update_source
@@ -115,7 +114,6 @@ namespace CyanVideos
             this.update_source.ForeColor = System.Drawing.Color.White;
             this.update_source.Name = "update_source";
             this.update_source.Size = new System.Drawing.Size(293, 24);
-            this.update_source.Text = "Aggiorna";
             this.update_source.Click += new System.EventHandler(this.update_source_Click);
             // 
             // visualizzaControversieToolStripMenuItem
@@ -125,7 +123,6 @@ namespace CyanVideos
             this.visualizzaControversieToolStripMenuItem.ForeColor = System.Drawing.Color.White;
             this.visualizzaControversieToolStripMenuItem.Name = "visualizzaControversieToolStripMenuItem";
             this.visualizzaControversieToolStripMenuItem.Size = new System.Drawing.Size(293, 24);
-            this.visualizzaControversieToolStripMenuItem.Text = "Visualizza controversie";
             this.visualizzaControversieToolStripMenuItem.Click += new System.EventHandler(this.Exclamative_Click);
             // 
             // compact
@@ -135,7 +132,6 @@ namespace CyanVideos
             this.compact.ForeColor = System.Drawing.Color.White;
             this.compact.Name = "compact";
             this.compact.Size = new System.Drawing.Size(293, 24);
-            this.compact.Text = "Compatta";
             this.compact.Click += new System.EventHandler(this.compact_Click);
             // 
             // mostraToolStripMenuItem
@@ -148,7 +144,6 @@ namespace CyanVideos
             this.mostraToolStripMenuItem.ForeColor = System.Drawing.Color.White;
             this.mostraToolStripMenuItem.Name = "mostraToolStripMenuItem";
             this.mostraToolStripMenuItem.Size = new System.Drawing.Size(293, 24);
-            this.mostraToolStripMenuItem.Text = "Mostra";
             // 
             // tuttoToolStripMenuItem
             // 
@@ -157,7 +152,6 @@ namespace CyanVideos
             this.tuttoToolStripMenuItem.ForeColor = System.Drawing.Color.White;
             this.tuttoToolStripMenuItem.Name = "tuttoToolStripMenuItem";
             this.tuttoToolStripMenuItem.Size = new System.Drawing.Size(190, 24);
-            this.tuttoToolStripMenuItem.Text = "Tutto";
             this.tuttoToolStripMenuItem.Click += new System.EventHandler(this.ViewAll_Click);
             // 
             // soloFilmToolStripMenuItem
@@ -167,7 +161,6 @@ namespace CyanVideos
             this.soloFilmToolStripMenuItem.ForeColor = System.Drawing.Color.White;
             this.soloFilmToolStripMenuItem.Name = "soloFilmToolStripMenuItem";
             this.soloFilmToolStripMenuItem.Size = new System.Drawing.Size(190, 24);
-            this.soloFilmToolStripMenuItem.Text = "Solo film";
             this.soloFilmToolStripMenuItem.Click += new System.EventHandler(this.Film_Click);
             // 
             // soloSerieTVToolStripMenuItem
@@ -177,7 +170,6 @@ namespace CyanVideos
             this.soloSerieTVToolStripMenuItem.ForeColor = System.Drawing.Color.White;
             this.soloSerieTVToolStripMenuItem.Name = "soloSerieTVToolStripMenuItem";
             this.soloSerieTVToolStripMenuItem.Size = new System.Drawing.Size(190, 24);
-            this.soloSerieTVToolStripMenuItem.Text = "Solo serie TV";
             this.soloSerieTVToolStripMenuItem.Click += new System.EventHandler(this.Series_Click);
             // 
             // monitorPredefinitoToolStripMenuItem
@@ -218,7 +210,6 @@ namespace CyanVideos
             this.consigliaStrutturaToolStripMenuItem.ForeColor = System.Drawing.Color.White;
             this.consigliaStrutturaToolStripMenuItem.Name = "consigliaStrutturaToolStripMenuItem";
             this.consigliaStrutturaToolStripMenuItem.Size = new System.Drawing.Size(293, 24);
-            this.consigliaStrutturaToolStripMenuItem.Text = "Consiglia struttura";
             this.consigliaStrutturaToolStripMenuItem.Click += new System.EventHandler(this.consigliaStrutturaToolStripMenuItem_Click);
             // 
             // Window
