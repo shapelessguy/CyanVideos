@@ -26,7 +26,11 @@ namespace CyanVideos
             this.path = icon.fullpath;
             actual_form = this;
             InitializeComponent();
-            Text = "Selezione corrispondenza per - " + name + " -";
+
+            label1.Text = "Select the extact match";
+            button2.Text = "Further search";
+            button3.Text = "No match";
+            Text = "Select match for - " + name + " -";
 
             timer_check = new Timer()
             {
@@ -42,7 +46,7 @@ namespace CyanVideos
 
             try
             {
-                button2.Text = "Ricerca approfondita";
+                button2.Text = "Further search";
                 icon.sec_films = icon.sec_films.OrderBy(o => o.runtime).ToList();
                 icon.sec_films = icon.sec_films.OrderBy(o => o.release_date).ToList();
                 icon.sec_films = icon.sec_films.OrderBy(o => o.revenue).ToList();
@@ -97,7 +101,7 @@ namespace CyanVideos
         private void Check(object sender, EventArgs e)
         {
             iterations++;
-            if (iterations > 10 && label2.Text != "Nessun risultato") { label2.ForeColor = Color.Blue; label2.Text = "Sto scaricando.."; }
+            if (iterations > 10 && label2.Text != "No result") { label2.ForeColor = Color.Blue; label2.Text = "Loading.."; }
             try
             {
                 if (icon.sec_films.Count == prev_count)
@@ -105,8 +109,8 @@ namespace CyanVideos
                     if (imdb != null)
                         if (!imdb.running)
                         {
-                            button2.Text = "Ricerca completata";
-                            if (checkedListBox1.Items.Count == 0) { label2.ForeColor = Color.Red; label2.Text = "Nessun risultato"; }
+                            button2.Text = "Search completed";
+                            if (checkedListBox1.Items.Count == 0) { label2.ForeColor = Color.Red; label2.Text = "No result"; }
                             else label2.Text = "";
                             timer_check.Tick -= Check;
                         }
@@ -150,7 +154,7 @@ namespace CyanVideos
                     }
                 }
             }
-            catch (Exception ex) { Console.WriteLine("Eccezione da TimerSelezione: " + ex.Message); }
+            catch (Exception ex) { Console.WriteLine("Exception TimerSelezione: " + ex.Message); }
 
         }
 
@@ -190,7 +194,7 @@ namespace CyanVideos
             imdb = new IMDB(icon, true);
             imdb.running = true;
             button2.Enabled = false;
-            button2.Text = "Aspetta..";
+            button2.Text = "Wait..";
             label2.Text = "";
             timer_check.Tick += Check;
         }

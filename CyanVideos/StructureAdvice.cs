@@ -16,7 +16,8 @@ namespace CyanVideos
         public static StructureAdvice win;
         public StructureAdvice()
         {
-            InitializeComponent();
+            InitializeComponent(); 
+            Text = "Suggested structure";
             active = true;
             foreach (string stringa in Supervisor.StructureAdvice) textBox1.Text += stringa + "\r\n";
         }

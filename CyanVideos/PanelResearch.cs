@@ -15,9 +15,11 @@ namespace CyanVideos
         public static List<string> allRoles = new List<string>();
         static public bool new_genre = false;
         static public bool new_role = false;
+        static public bool new_tag = true;
         private Timer timer, only_checked, time;
         public CheckedListBox listbox;
         public CheckedListBox rolebox;
+        public CheckedListBox tagbox;
         public TextBox hintText = new TextBox();
         static public string super_null_value = "...Search by...";
         static public string null_value = "...Search by...";
@@ -26,6 +28,7 @@ namespace CyanVideos
         private Label Finding;
         Label DateLabel;
         Label RevenueLabel;
+        Label TagLabel;
         public TextBox leftDate;
         public TextBox rightDate;
         public TextBox leftRevenue;
@@ -37,7 +40,8 @@ namespace CyanVideos
         public PanelResearch()
         {
             SuspendLayout();
-            BackColor = Color.Black;
+            BackgroundImage = Properties.Resources.Background2;
+            BackgroundImageLayout = ImageLayout.Stretch;
             BorderStyle = BorderStyle.FixedSingle;
             Visible = false;
             Click += ClickNull;
@@ -46,25 +50,36 @@ namespace CyanVideos
             DateLabel = new Label()
             {
                 Location = new Point(-1000, -1000),
-                BackColor = Color.Black,
+                BackColor = Color.Transparent,
                 ForeColor = Color.White,
                 Font = new Font("Arial", 16, FontStyle.Bold),
                 TextAlign = ContentAlignment.MiddleCenter,
-                Text = "\u2190 Intervallo date \u2192",
+                Text = "\u2190 Date range \u2192",
                 Size = new Size(40, 40),
             };
             Controls.Add(DateLabel);
             RevenueLabel = new Label()
             {
                 Location = new Point(-1000, -1000),
-                BackColor = Color.Black,
+                BackColor = Color.Transparent,
                 ForeColor = Color.White,
                 Font = new Font("Arial", 16, FontStyle.Bold),
                 TextAlign = ContentAlignment.MiddleCenter,
-                Text = "\u2190 Intervallo revenue ($) \u2192",
+                Text = "\u2190 Revenue range (M$) \u2192",
                 Size = new Size(40, 40),
             };
             Controls.Add(RevenueLabel);
+            TagLabel = new Label()
+            {
+                Location = new Point(-1000, -1000),
+                BackColor = Color.Transparent,
+                ForeColor = Color.White,
+                Font = new Font("Arial", 16, FontStyle.Bold),
+                TextAlign = ContentAlignment.MiddleCenter,
+                Text = "TAGS",
+                Size = new Size(40, 40),
+            };
+            Controls.Add(TagLabel);
             leftDate = new TextBox
             {
                 Location = new Point(-1000, -1000),
@@ -117,7 +132,7 @@ namespace CyanVideos
             Finding = new Label()
             {
                 Location = new Point(-1000, -1000),
-                BackColor = Color.Black,
+                BackColor = Color.Transparent,
                 ForeColor = Color.Blue,
                 Font = new Font("Arial", 16, FontStyle.Bold),
                 TextAlign = ContentAlignment.MiddleCenter,
@@ -146,8 +161,20 @@ namespace CyanVideos
                 SelectionMode = SelectionMode.One,
             };
             Controls.Add(rolebox);
+
+            tagbox = new CheckedListBox()
+            {
+                BackColor = Color.Black,
+                BorderStyle = BorderStyle.Fixed3D,
+                ForeColor = Color.White,
+                Font = new Font(Font, FontStyle.Bold),
+                CheckOnClick = true,
+            };
+            Controls.Add(tagbox);
+
             listbox.ItemCheck += Item_Click;
             rolebox.ItemCheck += RoleItem_Click;
+            tagbox.ItemCheck += TagItem_Click;
 
             hintText = new TextBox
             {
@@ -176,7 +203,7 @@ namespace CyanVideos
                 Enabled = true,
                 Interval = 5000,
             };
-            timer.Tick += CheckGenres;
+            timer.Tick += CheckGenres_Tags;
             only_checked = new Timer()
             {
                 Enabled = true,
@@ -233,28 +260,35 @@ namespace CyanVideos
             listbox.Size = new Size(Width / 7, Height - 20);
             listbox.Location = new Point(Width - 20 - listbox.Width, 10);
             rolebox.Location = new Point(10, 10);
-            rolebox.Size = new Size(Width / 7 -36, Height - 2 * rolebox.Location.Y);
+            rolebox.Size = new Size(Width / 7 - 36, Height - 2 * rolebox.Location.Y);
             hintText.Location = new Point(rolebox.Location.X + rolebox.Width + 50, 20);
             hintText.Size = new Size(listbox.Location.X - rolebox.Location.X - rolebox.Width - 100 - 20, 25);
-            DateLabel.Size = new Size(hintText.Width / 3, hintText.Height);
-            DateLabel.Location = new Point((hintText.Width-DateLabel.Width)/ 2 + hintText.Location.X, hintText.Location.Y + hintText.Height + 10);
+
+            int shift_l = (int)(hintText.Width * 0.1);
+            DateLabel.Size = new Size(hintText.Width / 5, hintText.Height);
+            DateLabel.Location = new Point((hintText.Width-DateLabel.Width)/ 2 + hintText.Location.X - shift_l, hintText.Location.Y + hintText.Height * 3 + 10);
             leftDate.Size = new Size(DateLabel.Width / 4, DateLabel.Height);
             leftDate.Location = new Point(DateLabel.Location.X - leftDate.Width, DateLabel.Location.Y);
             rightDate.Size = new Size(DateLabel.Width / 4, DateLabel.Height);
             rightDate.Location = new Point(DateLabel.Location.X +DateLabel.Width, DateLabel.Location.Y);
-            RevenueLabel.Location = new Point((hintText.Width - DateLabel.Width) / 2 + hintText.Location.X, hintText.Location.Y + 2 * hintText.Height+10);
-            RevenueLabel.Size = new Size(hintText.Width / 3, hintText.Height);
+            RevenueLabel.Location = new Point((hintText.Width - DateLabel.Width) / 2 + hintText.Location.X - shift_l, hintText.Location.Y + 2 * hintText.Height+10);
+            RevenueLabel.Size = new Size(hintText.Width / 5, hintText.Height);
             leftRevenue.Size = new Size(RevenueLabel.Width / 2, RevenueLabel.Height);
             leftRevenue.Location = new Point(RevenueLabel.Location.X - leftRevenue.Width, RevenueLabel.Location.Y);
             rightRevenue.Size = new Size(RevenueLabel.Width / 2, RevenueLabel.Height);
             rightRevenue.Location = new Point(RevenueLabel.Location.X + RevenueLabel.Width, RevenueLabel.Location.Y);
+
+            TagLabel.Location = new Point(rightRevenue.Location.X + (int)(rightRevenue.Width * 2.8) + 10, rightRevenue.Location.Y - hintText.Height);
+            TagLabel.Size = new Size(Width / 13, hintText.Height);
+            tagbox.Location = new Point(rightRevenue.Location.X + (int)(rightRevenue.Width * 2.6) + 10, rightRevenue.Location.Y);
+            tagbox.Size = new Size(Width / 10, Height / 2);
             Finding.Location = new Point(hintText.Location.X + hintText.Width / 4, hintText.Location.Y + 4 * hintText.Height);
             Finding.Size = new Size(hintText.Width / 2, hintText.Height);
             ResumeLayout(false);
         }
         public void FindingShow()
         {
-            Finding.Text = "Sto cercando..";
+            Finding.Text = "Searching..";
         }
         public void FindingHide()
         {
@@ -263,12 +297,13 @@ namespace CyanVideos
 
         public bool Filter(Film film, string path, ResearchClass research)
         {
+            if (film == null) film = Iconxx.GetPrincipalFilm(path + @"\infopowervideos.txt");
             bool output = true;
             try
             {
-
+                List<string> tags = InfoClass.GetTags(path);
                 string name = path.Substring(path.LastIndexOf(@"\") + 1);
-                name = Iconxx.CleanName(name);
+                name = Program.CleanName(name);
                 bool titleCompatible = true;
                 if (film != null) titleCompatible = Supervisor.Compatible(film.title, research.searchByName);
                 bool nameCompatible = Supervisor.Compatible(name, research.searchByName);
@@ -283,7 +318,7 @@ namespace CyanVideos
                     long film_revenue = film.revenue;
                     if (film_year < research.leftDate || film_year > research.rightDate) return false;
                     if (film_revenue < research.leftRevenue || film_revenue > research.rightRevenue) return false;
-                    
+
                     if (research.Genres.Count > 0)
                     {
                         output = true;
@@ -293,6 +328,26 @@ namespace CyanVideos
                             if (!film.genres.Contains(genre)) output = false;
                         }
                         if (!output) { return false; }
+                    }
+                    if (research.Tags.Count > 0)
+                    {
+                        output = true;
+                        if (tags == null)
+                        {
+                            return false;
+                        }
+                        if (tags.Count == 0)
+                        {
+                            return false;
+                        }
+                        foreach (string tag in research.Tags)
+                        {
+                            if (!tags.Contains(tag)) output = false;
+                        }
+                        if (!output)
+                        {
+                            return false;
+                        }
                     }
 
                     if (!Supervisor.TextNull(research.searchByRole, PanelResearch.null_values))
@@ -326,7 +381,11 @@ namespace CyanVideos
                 }
                 else return false;
             }
-            catch (Exception e) { Console.WriteLine("Message from Filter: " + e.Message); return true; }
+            catch (Exception e) 
+            { 
+                Console.WriteLine("Message from Filter: " + e.Message + e.ToString()); 
+                return true; 
+            }
 
 
 
@@ -334,7 +393,7 @@ namespace CyanVideos
             return output;
         }
 
-        private void CheckGenres(object sender, EventArgs e)
+        private void CheckGenres_Tags(object sender, EventArgs e)
         {
             try
             {
@@ -352,6 +411,14 @@ namespace CyanVideos
                     rolebox.Items.Clear();
                     rolebox.Items.AddRange(okRoles.ToArray());
                     new_role = false;
+                }
+
+                if (new_tag)
+                {
+                    List<string> tags = Properties.Settings.Default.tags.Split(new string[] { "|-.-|" }, System.StringSplitOptions.RemoveEmptyEntries).ToList();
+                    tagbox.Items.Clear();
+                    tagbox.Items.AddRange(tags.ToArray());
+                    new_tag = false;
                 }
             }
             catch (Exception) { }
@@ -421,6 +488,12 @@ namespace CyanVideos
             }
             catch (Exception) { }
         }
+        private void TagItem_Click(object sender, EventArgs e)
+        {
+            tagbox.SetSelected(tagbox.SelectedIndex, false);
+            time_slice = 0;
+            ready_research = true;
+        }
     }
 
     public class ResearchClass
@@ -434,8 +507,10 @@ namespace CyanVideos
         public long leftRevenue = 0;
         public long rightRevenue = 100000000000;
         public List<string> Genres = new List<string>();
+        public List<string> Tags = new List<string>();
         public string Role = "";
-        ResearchClass(string nametextbox, string roletextbox, string leftdate, string rightdate, string leftrevenue, string rightrevenue, List<string> genres, string Role)
+        ResearchClass(string nametextbox, string roletextbox, string leftdate, string rightdate, string leftrevenue, string rightrevenue, 
+            List<string> genres, List<string> tags, string Role)
         {
 
             this.searchByName = nametextbox;
@@ -445,12 +520,14 @@ namespace CyanVideos
 
             if (leftdate != "") leftDate = Convert.ToInt32(leftdate);
             if (rightdate != "") rightDate = Convert.ToInt32(rightdate);
-            if (leftrevenue != "") leftRevenue = Convert.ToInt64(leftrevenue);
-            if (rightrevenue != "") rightRevenue = Convert.ToInt64(rightrevenue);
+            if (leftrevenue != "") leftRevenue = (int)(Convert.ToDouble(leftrevenue) * 1000000);
+            if (rightrevenue != "") rightRevenue = (int)(Convert.ToDouble(rightrevenue) * 1000000);
             this.Role = Role;
             foreach (string genre in genres) Genres.Add(genre);
+            foreach (string tag in tags) Tags.Add(tag);
         }
-        ResearchClass(string nametextbox, string roletextbox, int leftdate, int rightdate, long leftrevenue, long rightrevenue, List<string> genres, string Role)
+        ResearchClass(string nametextbox, string roletextbox, int leftdate, int rightdate, long leftrevenue, long rightrevenue, 
+            List<string> genres, List<string> tags, string Role)
         {
 
             this.searchByName = nametextbox;
@@ -464,11 +541,12 @@ namespace CyanVideos
             rightRevenue = rightrevenue;
             this.Role = Role;
             foreach (string genre in genres) Genres.Add(genre);
+            foreach (string tag in tags) Tags.Add(tag);
         }
         public static void Initialize()
         {
             Console.WriteLine("Initializing Research..");
-            previousResearch = new ResearchClass("","","","","","",new List<string>(), "");
+            previousResearch = new ResearchClass("","","","","","", new List<string>(), new List<string>(), "");
         }
         public static bool IsNewResearch()
         {
@@ -482,7 +560,7 @@ namespace CyanVideos
                 //previousResearch.Verbose();
                 //actualResearch.Verbose();
                 previousResearch = new ResearchClass(actualResearch.searchByName, actualResearch.searchByRole, actualResearch.leftDate, actualResearch.rightDate,
-                    actualResearch.leftRevenue, actualResearch.rightRevenue, actualResearch.Genres, actualResearch.Role);
+                    actualResearch.leftRevenue, actualResearch.rightRevenue, actualResearch.Genres, actualResearch.Tags, actualResearch.Role);
                 return true;
             }
         }
@@ -493,12 +571,15 @@ namespace CyanVideos
             List<string> genres = new List<string>();
             foreach (string genre in Program.win.ricerca.listbox.CheckedItems) genres.Add(genre);
             genres = genres.OrderBy(o => o).ToList();
+            List<string> tags = new List<string>();
+            foreach (string tag in Program.win.ricerca.tagbox.CheckedItems) tags.Add(tag);
+            tags = tags.OrderBy(o => o).ToList();
 
 
             ResearchClass research;
             research = new ResearchClass(Program.win.hintText.Text, Program.win.ricerca.hintText.Text, Program.win.ricerca.leftDate.Text,
                 Program.win.ricerca.rightDate.Text, Program.win.ricerca.leftRevenue.Text, Program.win.ricerca.rightRevenue.Text,
-                genres, role);
+                genres, tags, role);
             return research;
         }
 
@@ -508,6 +589,8 @@ namespace CyanVideos
             if (first != null && second == null) { Initialize(); return true; }
             if (first.Genres.Count != second.Genres.Count) { return false; }
             for (int i = 0; i < first.Genres.Count; i++) if (first.Genres[i] != second.Genres[i]) { return false; }
+            if (first.Tags.Count != second.Tags.Count) { return false; }
+            for (int i = 0; i < first.Tags.Count; i++) if (first.Tags[i] != second.Tags[i]) { return false; }
             if (first.searchByName != second.searchByName) { return false; }
             if (first.searchByRole != second.searchByRole) { return false; }
             if (first.leftDate != second.leftDate) { return false; }
@@ -520,6 +603,7 @@ namespace CyanVideos
         {
             if (actualResearch == null) return false;
             if (actualResearch.Genres.Count != 0) { return true; }
+            if (actualResearch.Tags.Count != 0) { return true; }
             if (actualResearch.searchByRole != "") { return true; }
             if (actualResearch.leftDate != 0) { return true; }
             if (actualResearch.rightDate != 1000000000) { return true; }
@@ -542,48 +626,9 @@ namespace CyanVideos
             Console.WriteLine("from |" + leftDate + "| to |" + rightDate + "|");
             Console.WriteLine("from |" + leftRevenue + "| to |" + rightRevenue + "|");
             foreach (string genre in Genres) Console.Write(genre + ", ");
-        }
-        public static List<string> GetDefaultResearch()
-        {
-            if (Properties.Settings.Default.savedResearch == "")
-            { Initialize(); return null; }
-            string[] fragments = Properties.Settings.Default.savedResearch.Split(new string[] { "|^|" }, StringSplitOptions.None);
-            if(fragments.Length<8) { Initialize(); return null; }
-            string[] genres_ = fragments[7].Split(new string[] { "^_^" }, StringSplitOptions.RemoveEmptyEntries);
-            List<string> ListGenres = genres_.ToList();
-            previousResearch = new ResearchClass("", fragments[1], fragments[2], fragments[3], fragments[4], fragments[5], ListGenres, fragments[6]);
-            List<string> list = new List<string>();
-            list.Add(Convert.ToString(fragments[2]));
-            list.Add(Convert.ToString(fragments[3]));
-            list.Add(Convert.ToString(fragments[4]));
-            list.Add(Convert.ToString(fragments[5]));
-            return list;
-
-            //bool found = false;
-            for (int i = 0; i < Program.win.ricerca.rolebox.Items.Count; i++) if (fragments[6] == (string)Program.win.ricerca.rolebox.Items[i])
-                {
-                    Program.win.ricerca.rolebox.SetItemChecked(i, true);
-                    Program.win.ricerca.hintText.Text = PanelResearch.super_null_value + fragments[6];
-                    PanelResearch.null_value = Program.win.ricerca.hintText.Text;
-                    Program.win.ricerca.hintText.Enabled = true;
-                    //found = true;
-                    break; }
-
-            //if (fragments[1] != "") Program.win.ricerca.hintText.Text = fragments[1];
-            //if(fragments[1] == "")
-            {
-                //if (found)
-                {
-                    //Program.win.ricerca.hintText.Text = PanelResearch.super_null_value + fragments[6];
-                    //PanelResearch.null_value = Program.win.ricerca.hintText.Text;
-                    //Program.win.ricerca.hintText.Enabled = true;
-                }
-                //else 
-                //Program.win.ricerca.hintText.Text = PanelResearch.super_null_value;
-            }
-            //for (int i = 0; i < Program.win.ricerca.listbox.Items.Count; i++) if (ListGenres.Contains((string)Program.win.ricerca.listbox.Items[i]))
-                    //Program.win.ricerca.listbox.SetItemChecked(i, true);
-
+            Console.WriteLine();
+            foreach (string tag in Tags) Console.Write(tag + ", ");
+            Console.WriteLine();
         }
         public void Save()
         {
@@ -596,6 +641,7 @@ namespace CyanVideos
             saved += (rightRevenue == 100000000000) ? "" : Convert.ToString(rightRevenue); saved += "|^|";
             saved += Role + "|^|";
             foreach (string genre in Genres) saved += genre + "^_^"; saved += "|^|";
+            foreach (string tag in Tags) saved += tag + "^_^"; saved += "|^|";
             Properties.Settings.Default.savedResearch = saved;
             Properties.Settings.Default.Save();
         }

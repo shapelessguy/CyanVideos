@@ -32,8 +32,11 @@
     <Setting Name="volume" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">100</Value>
     </Setting>
-    <Setting Name="Logs" Type="System.String" Scope="User">
-      <Value Profile="(Default)" />
-    </Setting>
+	<Setting Name="Logs" Type="System.String" Scope="User">
+		<Value Profile="(Default)" />
+	</Setting>
+	<Setting Name="tags" Type="System.String" Scope="User">
+		<Value Profile="(Default)" />
+	</Setting>
   </Settings>
 </SettingsFile>

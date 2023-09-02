@@ -111,7 +111,7 @@ namespace CyanVideos
                 if (finalLog.filename == "") return null;
                 return finalLog;
             }
-            catch (Exception e) { Console.WriteLine("EXCEPTION in LOAD: "+e.Message); }
+            catch (Exception e) { Console.WriteLine("Exception in LOAD: " + e.Message); }
             return null;
         }
 
@@ -164,7 +164,6 @@ namespace CyanVideos
         {
             MediaPanel.PlayList = new List<Vision>();
             for (int i = 0; i < playlist.Count; i += 2) MediaPanel.PlayList.Add(new Vision(playlist[i], playlist[i + 1]));
-            //foreach (string file in playlist) { MediaPanel.PlayList.Add(new Vision(file, Path.GetFileNameWithoutExtension(file)));  }
 
             for (int i = 0; i < MediaPanel.PlayList.Count; i++)
                 if (MediaPanel.PlayList[i].filename == filename)

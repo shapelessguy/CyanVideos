@@ -1,4 +1,5 @@
-﻿using System;
+﻿using CyanVideos.MultiMonitorTool;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -31,7 +32,7 @@ namespace CyanVideos
         public Source DeepSource;
 
         public TextBox hintText = new TextBox();
-        public static string null_value = "..Search film..";
+        public static string null_value = "SEARCH MOVIE";
         public static string[] null_values;
         public Label OpenRicerca;
         public PanelResearch ricerca;
@@ -58,7 +59,7 @@ namespace CyanVideos
             //ResizeWin(true, false);
             Keygrip1.Focus();
             //Properties.Settings.Default.Logs = "";
-            if (Iconxx.LoadSegments == null && System.Environment.GetEnvironmentVariable("PROCESSOR_ARCHITECTURE")=="AMD64")
+            if (Iconxx.LoadSegments == null)// && System.Environment.GetEnvironmentVariable("PROCESSOR_ARCHITECTURE")=="AMD64")
                 Iconxx.LoadSegments = new System.Threading.Timer(Iconxx.TakeSnap, null, 200, System.Threading.Timeout.Infinite);
             if (Properties.Settings.Default.Logs.Length > 2)
             {
@@ -90,7 +91,9 @@ namespace CyanVideos
         }
         public void DisposeDeepSource()
         {
-            if (DeepSource != null && !DeepSource.Null) { DeepSource.Dispose(true); Console.WriteLine("here1"); }
+            if (DeepSource != null && !DeepSource.Null) { 
+                DeepSource.Dispose(true);
+            }
             DeepSource = new Source("","");
         }
         static bool res_touching = false;
@@ -99,6 +102,18 @@ namespace CyanVideos
             DoubleBuffered = true;
             CheckForIllegalCrossThreadCalls = false;
             InitializeComponent();
+            addSourceSeries.Text = "Add Series";
+            update_source.Text = "Update";
+            visualizzaControversieToolStripMenuItem.Text = "Show issues";
+            compact.Text = "Compact view";
+            mostraToolStripMenuItem.Text = "Show";
+            tuttoToolStripMenuItem.Text = "All";
+            soloFilmToolStripMenuItem.Text = "Movies";
+            soloSerieTVToolStripMenuItem.Text = "Series";
+            monitorPredefinitoToolStripMenuItem.Text = "Default screen";
+            internalPlayer.Text = "Internal player";
+            consigliaStrutturaToolStripMenuItem.Text = "Suggest structure";
+            languageTagsToolStripMenuItem.Text = "Language TAGS";
             Menu.Visible = false;
             Menu.Renderer = new MyRenderer();
             ClientSize = new Size(Program.defaultScreen.Bounds.Size.Width / 2, Program.defaultScreen.Bounds.Size.Height / 2);
@@ -250,25 +265,34 @@ namespace CyanVideos
             else if (suspendedResize) { ResizePanels(true, true, true); Console.WriteLine("Suspended Resize!"); suspendedResize = false; }
             else ResizePanels(first, second, onlyLocation, onlyLocation2);
         }
-        public void OpenRicerca_Click(object sender, EventArgs e)
+        public void OpenRicerca_Click(bool force = false, bool open = true)
         {
             SuspendLayout();
-            ClickNull(sender, e);
             ricerca.rolebox.ClearSelected();
-            if (!ricerca.Visible)
+            if (force)
             {
-                ricerca.Visible = true;
-                //ricerca.BringToFront();
-                //OpenRicerca.BringToFront();
+                ricerca.Visible = open;
             }
             else
             {
-                ricerca.Visible = false;
+                if (!ricerca.Visible)
+                {
+                    ricerca.Visible = true;
+                }
+                else
+                {
+                    ricerca.Visible = false;
+                }
             }
             ResumeLayout(false);
             ResizePanels(false, false);
             lastWidth = Width;
             lastHeight = Height;
+        }
+        public void OpenRicerca_Click(object sender, EventArgs e)
+        {
+            ClickNull(sender, e);
+            OpenRicerca_Click();
         }
 
         private void ResizePanels(bool first=true, bool second= true, bool onlyLocation = false, bool onlyLocation2 = false)
@@ -402,7 +426,7 @@ namespace CyanVideos
                     UpdateSources();
                     Program.EnableLoading(false);
                 }
-                catch (Exception) { Program.EnableLoading(false); MessageBox.Show("Non è possibile selezionare questa cartella a causa di mancata autorizzazione"); }
+                catch (Exception) { Program.EnableLoading(false); MessageBox.Show("It is not possible to select this folder due to missing authorization"); }
             }
         }
 
@@ -616,7 +640,7 @@ namespace CyanVideos
             Console.WriteLine("Updating sources..");
             firstpanel.bias = 0;
             SuspendLayout();
-            Text = "CyanVideos" + " - Aggiornamento in corso..";
+            Text = "CyanVideos" + " - Updating sources..";
             Supervisor.Disposer();
             foreach (Source source in Sources) {source.Dispose(); }
             Sources.Clear();
@@ -653,7 +677,7 @@ namespace CyanVideos
             foreach (var source in Sources) if (source.directory == directory) found = true;
             if (found) return;
 
-            Text = "CyanVideos" + " - Aggiornamento in corso..";
+            Text = "CyanVideos" + " - Updating sources..";
             Program.EnableLoading(true);
             if (series)
             {
@@ -748,22 +772,24 @@ namespace CyanVideos
         {
             listMenu.Clear();
             this.monitorPredefinitoToolStripMenuItem.DropDownItems.Clear();
-            foreach (Screen screen in Screen.AllScreens)
-            {
+            foreach (string screen_id in Program.monitors.getIds()) 
+            { 
+                Screen screen = Program.monitors.getScreen(screen_id);
                 ToolStripMenuItem neww;
                 string screenName = ScreenClass.GetScreenName(screen);
                 listMenu.Add(neww = new ToolStripMenuItem()
                 {
                     BackColor = Color.Black,
                     CheckOnClick = true,
-                    Checked = screenName == ScreenClass.GetScreenName(Program.defaultScreen),
+                    Checked = screen == Program.defaultScreen,
                     ForeColor = System.Drawing.Color.White,
-                    Name = screenName,
+                    Name = screen_id,
                     Size = new System.Drawing.Size(190, 24),
-                    Text = screenName + "  ("+screen.Bounds.Width +" x "+ screen.Bounds.Height + ")",
+                    Text = screen_id + "  (" + screen.Bounds.Width + " x " + screen.Bounds.Height + ")",
                 });
                 neww.Click += new System.EventHandler(SetDefaultMonitor);
             }
+            
             ToolStripMenuItem[] array = listMenu.ToArray();
             this.monitorPredefinitoToolStripMenuItem.DropDownItems.AddRange(array);
 
@@ -775,7 +801,10 @@ namespace CyanVideos
         private void SetDefaultMonitor(object sender, EventArgs e)
         {
             ToolStripMenuItem toolScreen = (ToolStripMenuItem)sender;
-            foreach (Screen screen in Screen.AllScreens) if (ScreenClass.GetScreenName(screen) == toolScreen.Name) Program.defaultScreen = screen;
+            foreach (string screen_id in Program.monitors.getIds())
+            {
+                if (screen_id == toolScreen.Name) Program.defaultScreen = Program.monitors.getScreen(screen_id);
+            }
             Properties.Settings.Default.defDevice = toolScreen.Name;
             Properties.Settings.Default.Save();
         }
@@ -800,7 +829,7 @@ namespace CyanVideos
             {
                 internalPlayer.Checked = false;
                 Program.VLC_Installed = false;
-                MessageBox.Show(Program.libvlc+" non esiste. Copiare libvlc (libreria di VLC) all'interno della cartella d'installazione per utilizzare il lettore interno!");
+                MessageBox.Show(Program.libvlc + " doesn't exist in the installation folder. Please add it to that folder to use the internal player!");
             }
             else
             {
@@ -825,6 +854,12 @@ namespace CyanVideos
                 StructureAdvice.win = new StructureAdvice();
                 StructureAdvice.win.Show();
             }
+        }
+
+        private void languageTagsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            TagWin win = new TagWin();
+            win.Show();
         }
     }
 

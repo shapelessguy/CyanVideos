@@ -1,9 +1,11 @@
-﻿using System;
+﻿using CyanVideos.MultiMonitorTool;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -17,12 +19,14 @@ namespace CyanVideos
         public static string[] imageExtensions = { "png", "bmp", "gif", "png", "wmf", "jpeg", "jfif", "tiff", "jpg" };
         public static string[] videoExtensions = { "3gp","asf","avi","divx","flv","swf","mp4","mpg","ogm","wmv","mov",
             "mkv","nbr","rm","vob", "sfd","mpeg","webm","xvid" };
+        public static string[] subExtensions = { "srt" };
         public static Screen defaultScreen;
-        private static System.Threading.Thread Loading;
+        private static Thread Loading;
         public static LoadingForm loadingForm;
         private static bool loading_active = false;
         public static bool VLC_Installed = false;
         public static bool enabledToSave = false;
+        public static MonitorCollection monitors;
 
         public static void EnableLoading(bool enable = true)
         {
@@ -39,10 +43,16 @@ namespace CyanVideos
         [STAThread]
         static void Main()
         {
-
-            Environment.CurrentDirectory = AppDomain.CurrentDomain.BaseDirectory;
-            Console.WriteLine("System architecture: "+ System.Environment.GetEnvironmentVariable("PROCESSOR_ARCHITECTURE"));
+            monitors = MonitorCollection.getMonitorConfiguration();
             Application.SetUnhandledExceptionMode(UnhandledExceptionMode.CatchException);
+            Application.EnableVisualStyles();
+            Application.SetCompatibleTextRenderingDefault(false);
+            MainView();
+        }
+        static void MainView()
+        {
+            Environment.CurrentDirectory = AppDomain.CurrentDomain.BaseDirectory;
+            Console.WriteLine("System architecture: " + System.Environment.GetEnvironmentVariable("PROCESSOR_ARCHITECTURE"));
             Application.ThreadException += (sender, args) => {
                 MessageBox.Show(string.Format("{0}:\n\n{1}", args.Exception.GetType().Name, args.Exception.Message),
                     string.Format(" {0}: Error", ""),
@@ -57,20 +67,21 @@ namespace CyanVideos
             try
             {
                 VLC_Installed = false;
-                try { if (Directory.Exists(libvlc)) { VLC_Installed = true; } } catch (Exception e) { MessageBox.Show(e.Message); };
-                // MessageBox.Show(libvlc + "  "+ VLC_Installed);
-                if(Directory.Exists(@"C:\Program Files\VideoLAN\VLC")) libvlc = @"C:\Program Files\VideoLAN\VLC";
+                try 
+                { 
+                    if (Directory.Exists(libvlc)) { VLC_Installed = true; } 
+                } 
+                catch (Exception e) 
+                { 
+                    MessageBox.Show(e.Message); 
+                };
                 SetMonitor();
-                Application.EnableVisualStyles();
-                Application.SetCompatibleTextRenderingDefault(false);
 
-                Loading = new System.Threading.Thread(LOADING);
+                Loading = new Thread(LOADING);
                 Loading.Start();
-                //foreach (string dir in Directory.GetDirectories(@"C:\Users\Claudio\Desktop\Film")) Directory.CreateDirectory(dir.Replace("Film", "FilmA"));
-                Console.WriteLine("Application start");
                 Application.Run(win = new Window());
             }
-            catch (Exception ex) { MessageBox.Show("Errore: "+ex.Message); }
+            catch (Exception ex) { MessageBox.Show("Errore: " + ex.Message); }
         }
         public static void LOADING()
         {
@@ -95,7 +106,7 @@ namespace CyanVideos
                     string line = key + "|#|" + Window.FaultSources[key] + "|#|";
                     if (!Properties.Settings.Default.Sources.Contains(line)) Properties.Settings.Default.Sources += line;
                 }
-                //Console.WriteLine("saving "+Window.logs.Count+" logs");
+
                 foreach (Log log in Window.logs)
                 {
                     string line = log.serialize() + "|#|";
@@ -107,12 +118,18 @@ namespace CyanVideos
         }
         private static void SetMonitor()
         {
-            bool foundScreen = false;
-            Screen[] allScreens = Screen.AllScreens;
-            foreach (Screen screen in allScreens) if (ScreenClass.GetScreenName(screen) == Properties.Settings.Default.defDevice) foundScreen = true;
-            if (!foundScreen) Properties.Settings.Default.defDevice = ScreenClass.GetScreenName(Screen.PrimaryScreen);
-            if (Properties.Settings.Default.defDevice == "") Properties.Settings.Default.defDevice = ScreenClass.GetScreenName(GetMaxScreen());
-            foreach (Screen screen in allScreens) if (ScreenClass.GetScreenName(screen) == Properties.Settings.Default.defDevice) defaultScreen = screen;
+            string foundScreen = "";
+
+            foreach (string screen_id in monitors.getIds()) if (screen_id == Properties.Settings.Default.defDevice)
+                {
+                    foundScreen = screen_id;
+                }
+            if (foundScreen == "")
+            {
+                foundScreen = monitors.getIds()[0];
+            }
+            defaultScreen = monitors.getScreen(foundScreen);
+            Properties.Settings.Default.defDevice = foundScreen;
             Properties.Settings.Default.Save();
         }
 
@@ -124,7 +141,7 @@ namespace CyanVideos
             {
                 images = GetAllImages(Directory.GetFiles(dir), false).ToList();
             }
-            catch (Exception) { Console.WriteLine("Errore di recupero informazioni"); return "fault"; }
+            catch (Exception) { Console.WriteLine("Error while fetching information"); return "fault"; }
             if (images.Count == 0) return "";
             foreach (string img in images) { if (img.Contains(Directory.GetParent(dir).FullName + @"\" + Path.GetFileNameWithoutExtension(dir))) return img; }
             return images[0];
@@ -166,12 +183,19 @@ namespace CyanVideos
             }
             return false;
         }
-        public static string[] GetAllVideos(string[] files)
+        public static string[] GetAllVideos(string directory, int recursion=0)
         {
             List<string> final = new List<string>();
-            foreach (string file in files)
+            if (recursion > 0)
             {
-                //Console.WriteLine(file);
+                recursion -= 1;
+                foreach (var dir in Directory.GetDirectories(directory))
+                {
+                    final.AddRange(GetAllVideos(dir, recursion));
+                }
+            }
+            foreach (string file in Directory.GetFiles(directory))
+            {
                 foreach (string extension in videoExtensions)
                 {
                     if (file.Substring(file.Length - 5).ToLower().Contains("." + extension)) final.Add(file);
@@ -179,18 +203,97 @@ namespace CyanVideos
             }
             return final.ToArray();
         }
-        public static string[] GetAllSubs(string[] files)
+        public static string[] GetAllSubs(string directory)
         {
             List<string> final = new List<string>();
-            foreach (string file in files)
+            foreach (string dir in Directory.GetDirectories(directory))
             {
-                //Console.WriteLine(file);
-                foreach (string extension in new string[] {"srt"})
+                foreach (string file in Directory.GetFiles(dir))
+                {
+                    foreach (string extension in subExtensions)
+                    {
+                        if (file.Substring(file.Length - 5).ToLower().Contains("." + extension)) final.Add(file);
+                    }
+                }
+            }
+            foreach (string file in Directory.GetFiles(directory))
+            {
+                foreach (string extension in subExtensions)
                 {
                     if (file.Substring(file.Length - 5).ToLower().Contains("." + extension)) final.Add(file);
                 }
             }
             return final.ToArray();
+        }
+        public static string FormatNumberZero(int number, int length = 3)
+        {
+            string output = "";
+            for (int i = number.ToString().Length; i < length; i++) output += "0";
+            return output + number.ToString();
+        }
+        public static string CleanZeros(string text)
+        {
+            if (text.Contains("x"))
+            {
+                int x_pos = text.IndexOf("x"), n1 = -1, n2 = -1;
+                try
+                {
+                    n1 = Int32.Parse(text.Substring(0, x_pos));
+                    n2 = Int32.Parse(text.Substring(x_pos + 1));
+                    return n1 + "x" + n2;
+                }
+                catch { }
+            }
+            return text;
+        }
+        public static string CleanName(string name)
+        {
+            string output = "";
+            List<int> right_par = new List<int>();
+            List<int> left_par = new List<int>();
+            string new_name = name;
+            bool exit = false;
+            int iteration = 0;
+            do
+            {
+                for (int i = 0; i < new_name.Length; i++)
+                {
+                    if (new_name.Substring(i, 1) == "(") right_par.Add(i);
+                    if (new_name.Substring(i, 1) == ")") left_par.Add(i);
+                }
+                iteration++;
+                exit = false;
+                for (int i = 0; i < right_par.Count; i++)
+                {
+                    for (int j = 0; j < left_par.Count; j++)
+                    {
+                        int after_i = new_name.Length + 1;
+                        if (i != right_par.Count - 1) after_i = right_par[i + 1];
+                        if (left_par[j] > right_par[i] && left_par[j] < after_i)
+                        {
+                            output += new_name.Substring(0, right_par[i]);
+                            output += new_name.Substring(left_par[j] + 1, new_name.Length - left_par[j] - 1);
+                            right_par.Clear();
+                            left_par.Clear();
+                            new_name = output;
+                            output = "";
+                            exit = true;
+                        }
+                        if (exit) break;
+                    }
+                    if (exit) break;
+                }
+            }
+            while (exit && iteration < 10);
+
+            do
+            {
+                new_name = new_name.Replace("  ", " ");
+            }
+            while (new_name.Contains("  "));
+            output = new_name.Trim();
+            output = CleanZeros(output);
+            return output;
         }
         public static void Compress(string image_path, string dest_path = "", int width = 0, int height = 0)
         {
@@ -238,7 +341,7 @@ namespace CyanVideos
         {
             if (IsVideo(path)) return -2;                                   // file multimediale
             int result = 0;
-            int video_num = GetAllVideos(Directory.GetFiles(path)).Length;
+            int video_num = GetAllVideos(path).Length;
             int dir_num = Directory.GetDirectories(path).Length;
             try
             {

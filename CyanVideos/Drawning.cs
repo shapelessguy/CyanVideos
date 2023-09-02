@@ -77,7 +77,7 @@ namespace CyanVideos
             StringFormat sf = new StringFormat();
             sf.LineAlignment = StringAlignment.Center;
             sf.Alignment = StringAlignment.Center;
-            graph.DrawImage(Properties.Resources.Namelabel, rect);
+            // graph.DrawImage(Properties.Resources.Namelabel, rect);
             float fontSize = (float)(width) / 400 * 28;
             //Console.WriteLine(fontSize);
             graph.DrawString(Icon.title, new Font(fontTitle, fontSize, FontStyle.Bold), Brushes.Red, rect, sf);
@@ -315,7 +315,7 @@ namespace CyanVideos
                         StringFormat sf = new StringFormat();
                         sf.LineAlignment = StringAlignment.Center;
                         sf.Alignment = StringAlignment.Center;
-                        graph_temp.DrawImage(Properties.Resources.Namelabel, rect);
+                        // graph_temp.DrawImage(Properties.Resources.Namelabel, rect);
                         float fontSize = (float)(Rect.Width) / 400 * 28;
                         graph_temp.DrawString(Icon.title, new Font(fontTitle, fontSize, FontStyle.Bold), Brushes.Red, rect, sf);
                     }
@@ -337,7 +337,7 @@ namespace CyanVideos
                         graph_temp.DrawImage(Properties.Resources.playH, rect2);
                         float fontSize = (float)(Rect.Width) / 400 * 16 + 7;
                         if (fontSize < 10) fontSize = 12;
-                        graph_temp.DrawString("Continua visione", new Font(fontTitle, fontSize, FontStyle.Bold), Brushes.Black, rect1, sf);
+                        graph_temp.DrawString("Resume movie", new Font(fontTitle, fontSize, FontStyle.Bold), Brushes.Black, rect1, sf);
                     }
                     if (extrachangeIcon && !Icon.in_first_panel)
                     {

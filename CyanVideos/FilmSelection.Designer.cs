@@ -134,7 +134,7 @@
             this.MinimumSize = new System.Drawing.Size(750, 280);
             this.Name = "FilmSelection";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "FilmSelection";
+            this.Text = "Movie Selection";
             this.ResumeLayout(false);
 
         }

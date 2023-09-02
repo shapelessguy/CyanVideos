@@ -52,6 +52,7 @@ namespace CyanVideos
             this.Keygrip1 = new System.Windows.Forms.TextBox();
             this.Keygrip2 = new System.Windows.Forms.TextBox();
             this.consigliaStrutturaToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.languageTagsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.Menu.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -83,7 +84,9 @@ namespace CyanVideos
             this.mostraToolStripMenuItem,
             this.monitorPredefinitoToolStripMenuItem,
             this.internalPlayer,
-            this.consigliaStrutturaToolStripMenuItem});
+            this.consigliaStrutturaToolStripMenuItem,
+            this.languageTagsToolStripMenuItem
+            });
             this.menu1.Font = new System.Drawing.Font("Showcard Gothic", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.menu1.ForeColor = System.Drawing.Color.White;
             this.menu1.Name = "menu1";
@@ -178,7 +181,6 @@ namespace CyanVideos
             this.monitorPredefinitoToolStripMenuItem.ForeColor = System.Drawing.Color.White;
             this.monitorPredefinitoToolStripMenuItem.Name = "monitorPredefinitoToolStripMenuItem";
             this.monitorPredefinitoToolStripMenuItem.Size = new System.Drawing.Size(293, 24);
-            this.monitorPredefinitoToolStripMenuItem.Text = "Monitor predefinito";
             // 
             // internalPlayer
             // 
@@ -187,7 +189,6 @@ namespace CyanVideos
             this.internalPlayer.ForeColor = System.Drawing.Color.White;
             this.internalPlayer.Name = "internalPlayer";
             this.internalPlayer.Size = new System.Drawing.Size(293, 24);
-            this.internalPlayer.Text = "Lettore interno";
             this.internalPlayer.Click += new System.EventHandler(this.internalPlayer_Click);
             // 
             // Keygrip1
@@ -212,6 +213,14 @@ namespace CyanVideos
             this.consigliaStrutturaToolStripMenuItem.Size = new System.Drawing.Size(293, 24);
             this.consigliaStrutturaToolStripMenuItem.Click += new System.EventHandler(this.consigliaStrutturaToolStripMenuItem_Click);
             // 
+            // languageTagsToolStripMenuItem
+            // 
+            this.languageTagsToolStripMenuItem.BackColor = System.Drawing.Color.Black;
+            this.languageTagsToolStripMenuItem.ForeColor = System.Drawing.Color.White;
+            this.languageTagsToolStripMenuItem.Name = "languageTagsToolStripMenuItem";
+            this.languageTagsToolStripMenuItem.Size = new System.Drawing.Size(293, 24);
+            this.languageTagsToolStripMenuItem.Click += new System.EventHandler(this.languageTagsToolStripMenuItem_Click);
+            // 
             // Window
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -228,6 +237,7 @@ namespace CyanVideos
             this.Text = "Form1";
             this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
             this.Load += new System.EventHandler(this.Window_Load);
+            RefreshMenu();
             this.Menu.ResumeLayout(false);
             this.Menu.PerformLayout();
             this.ResumeLayout(false);
@@ -253,6 +263,7 @@ namespace CyanVideos
         private System.Windows.Forms.ToolStripMenuItem compact;
         private System.Windows.Forms.ToolStripMenuItem internalPlayer;
         private System.Windows.Forms.ToolStripMenuItem consigliaStrutturaToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem languageTagsToolStripMenuItem;
     }
 }
 

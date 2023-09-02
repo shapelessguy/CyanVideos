@@ -12,10 +12,11 @@ using Vlc.DotNet.Wpf;
 using Vlc.DotNet.Core;
 using Vlc.DotNet.Forms;
 using System.Windows.Threading;
+using AXVLC;
 
 namespace CyanVideos
 {
-    public class PlayerX : Panel
+    public class Player : Panel
     {
         int minimumInterval = 500;
         public List<Log> logs = new List<Log>();
@@ -23,11 +24,11 @@ namespace CyanVideos
         private Vlc.DotNet.Forms.VlcControl media;
         public List<Vlc.DotNet.Forms.VlcControl> medias = new List<Vlc.DotNet.Forms.VlcControl>();
         
-        public PlayerX()
+        public Player()
         {
             return;
-            System.Threading.Thread newThread = new System.Threading.Thread(NEWMEDIA);
-            newThread.Start();
+            // System.Threading.Thread newThread = new System.Threading.Thread(NEWMEDIA);
+            // newThread.Start();
         }
 
         private void NEWMEDIA()
@@ -165,7 +166,10 @@ namespace CyanVideos
                 List<ToolStripMenuItem> listMenuAudio = new List<ToolStripMenuItem>();
 
                 Dictionary<int, string> audioTrack = new Dictionary<int, string>();
-                foreach (var audio in media.Audio.Tracks.All) audioTrack.Add(audio.ID, audio.Name);
+                foreach (var audio in media.Audio.Tracks.All)
+                {
+                    if (audio.ID != -1) audioTrack.Add(audio.ID, audio.Name);
+                }
                 foreach (var item in audioTrack)
                 {
                     ToolStripMenuItem neww;
@@ -243,11 +247,11 @@ namespace CyanVideos
         string actSub = "";
         public ToolStripMenuItem[] GetSubRestMenu()
         {
-            return null;
+            // return null;
             if (media == null) return null;
             List<ToolStripMenuItem> listMenuSub = new List<ToolStripMenuItem>();
 
-            string[] subs = Program.GetAllSubs(Directory.GetFiles(Directory.GetParent(actPath).FullName));
+            string[] subs = Program.GetAllSubs(Directory.GetParent(actPath).FullName);
             Dictionary<string, string> subTrack = new Dictionary<string, string>();
             foreach (var sub in subs)
             {
@@ -274,12 +278,21 @@ namespace CyanVideos
                 neww.Click += (o, e) => {
                     float position = media.Position;
                     string[] opts = { @"sub-file=" + neww.Name };
-                    try { this.Invoke(new Action(() => EffectivelyLoad())); } catch (Exception) { }
-                    //medias[medias.Count - 1].SetMedia(new FileInfo(actPath), opts);
-                    //medias[medias.Count - 1].Play();
-                    System.Threading.Thread.Sleep(100);
+
+                    if (actSub == neww.Name)
+                    {
+                        medias[medias.Count - 1].SetMedia(new FileInfo(actPath));
+                        actSub = "";
+                    }
+                    else
+                    {
+                        medias[medias.Count - 1].SetMedia(new FileInfo(actPath), opts);
+                        actSub = neww.Name;
+                    }
+
+                    medias[medias.Count - 1].Play();
+                    // System.Threading.Thread.Sleep(100);
                     media.Position = position;
-                    actSub = neww.Name;
                     RefreshForm();
                 };
             }

@@ -8,7 +8,10 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Timers;
 using System.Windows.Forms;
+using System.Windows.Media;
+using System.Windows.Media.Media3D;
 using AForge.Video;
+using LibVLCSharp.Shared;
 
 namespace CyanVideos
 {
@@ -94,19 +97,19 @@ namespace CyanVideos
                     }
                 }
             }
-            catch (Exception e) { Console.WriteLine("Impossibile salvare: " + e.Message); }
+            catch (Exception e) { Console.WriteLine("Error while saving: " + e.Message); }
         }
 
         public Iconxx(string sourcepath, string fullpath, bool series, int forcedHeight = 0, bool extremis_series = false, bool in_first_panel = false)
         {
             this.series = series;
-            if (Source.verbose) Console.WriteLine("       Iconxx" + (this.series == true ? ("(Serie)") : "") + ": " + fullpath + "  has been added");
+            if (Source.verbose) Console.WriteLine("       Iconxx" + (this.series == true ? ("(Series)") : "") + ": " + fullpath + "  has been added");
             this.sourcepath = sourcepath;
             infopath = fullpath + @"\infopowervideos.txt";
             this.fullpath = fullpath;
             this.forcedHeight = forcedHeight;
             imagePath = "";
-            title = CleanName(Path.GetFileNameWithoutExtension(fullpath));
+            title = Program.CleanName(Path.GetFileNameWithoutExtension(fullpath));
             if (this.series) this.in_first_panel = in_first_panel;
             if (series) folder = true;
             else folder = isFolder(fullpath, this.series);
@@ -129,7 +132,7 @@ namespace CyanVideos
                 Check_Save();
                 if (save_timer != null) save_timer.Change(500, System.Threading.Timeout.Infinite);
             }
-            catch (Exception ex) { Console.WriteLine("Eccezione da TimeSaving: " + ex.Message); }
+            catch (Exception ex) { Console.WriteLine("Exception TimeSaving: " + ex.Message); }
         }
         void TimerImage(Object state)
         {
@@ -155,7 +158,6 @@ namespace CyanVideos
                 else bypass++;
             }
         }
-
         public void UpdateContinue()
         {
             ContinueToWatch = Log.FindByParent(Window.logs, fullpath);
@@ -172,64 +174,27 @@ namespace CyanVideos
                 {
                     if (series)
                     {
-                        directories = Program.GetAllVideos(Directory.GetFiles(path));
-                        if (directories.Length > 0) return true;
+                        if (Program.GetAllVideos(path).Length > 0) return true;
                     }
-
                     return false;
                 }
-                else return true;
+                else
+                {
+                    bool multimedia_file_found = false;
+                    foreach (string directory in directories)
+                    {
+                        string[] files = Directory.GetFiles(directory);
+                        for (int i = 0; i < files.Length; i++)
+                        {
+                            if (Program.IsVideo(files[i])) { multimedia_file_found = true; break; }
+                        }
+                    }
+                    if (!multimedia_file_found) { return false; }
+                    return true;
+                }
             }
             catch (Exception) { return false; }
         }
-        public static string CleanName(string name)
-        {
-            string output = "";
-            List<int> right_par = new List<int>();
-            List<int> left_par = new List<int>();
-            string new_name = name;
-            bool exit = false;
-            int iteration = 0;
-            do
-            {
-                for (int i = 0; i < new_name.Length; i++)
-                {
-                    if (new_name.Substring(i, 1) == "(") right_par.Add(i);
-                    if (new_name.Substring(i, 1) == ")") left_par.Add(i);
-                }
-                iteration++;
-                exit = false;
-                for (int i = 0; i < right_par.Count; i++)
-                {
-                    for (int j = 0; j < left_par.Count; j++)
-                    {
-                        int after_i = new_name.Length + 1;
-                        if (i != right_par.Count - 1) after_i = right_par[i + 1];
-                        if (left_par[j] > right_par[i] && left_par[j] < after_i)
-                        {
-                            output += new_name.Substring(0, right_par[i]);
-                            output += new_name.Substring(left_par[j] + 1, new_name.Length - left_par[j] - 1);
-                            right_par.Clear();
-                            left_par.Clear();
-                            new_name = output;
-                            output = "";
-                            exit = true;
-                        }
-                        if (exit) break;
-                    }
-                    if (exit) break;
-                }
-            }
-            while (exit && iteration < 10);
-
-            do
-            {
-                new_name = new_name.Replace("  ", " ");
-            }
-            while (new_name.Contains("  "));
-            return new_name.Trim();
-        }
-
 
         //bool mustFindImage = false;
         //int iterations = 10;
@@ -249,7 +214,6 @@ namespace CyanVideos
         {
             try
             {
-                if (fullpath.Contains("Pirates of carribbbean")) Console.WriteLine("Hey");
                 if ((folder || series) && !in_first_panel) return true;
 
                 if (reliability == -1)
@@ -317,7 +281,7 @@ namespace CyanVideos
                 return true;
 
             }
-            catch (Exception a) { Console.WriteLine("Eccezione da parte di CheckExclamation: " + a.Message); return false; }
+            catch (Exception a) { Console.WriteLine("Exception CheckExclamation: " + a.Message); return false; }
         }
 
 
@@ -392,7 +356,7 @@ namespace CyanVideos
                 //Program.win.RefreshFirstPanel(true);
                 //Program.win.RefreshSecondPanel(true);
             }
-            catch (Exception ex) { Console.WriteLine("Eccezione da CheckSubFolders: " + ex.Message); }
+            catch (Exception ex) { Console.WriteLine("Exception CheckSubFolders: " + ex.Message); }
         }
 
         private void FindBackIcon(object sender, EventArgs e)
@@ -406,7 +370,7 @@ namespace CyanVideos
                 else { Image = Properties.Resources.folder; }
                 ImageBlurred = new Bitmap(Image, takeBlurLevel(Image).X, takeBlurLevel(Image).Y);
             }
-            catch (Exception ex) { Console.WriteLine("Eccezione da FindBackIcons: " + ex.Message); }
+            catch (Exception ex) { Console.WriteLine("Exception FindBackIcons: " + ex.Message); }
         }
 
         private Point takeBlurLevel(Image image)
@@ -467,7 +431,7 @@ namespace CyanVideos
                     path_we = Directory.GetParent(fullpath).FullName + @"\" + Path.GetFileNameWithoutExtension(fullpath);
                     path_r = fullpath;
                 }
-                else if (Program.GetAllVideos(Directory.GetFiles(fullpath)).Length == 1)
+                else if (Program.GetAllVideos(fullpath).Length == 1)
                 {
                     path_we = Directory.GetParent(Directory.GetFiles(fullpath)[0]).FullName + @"\" + Path.GetFileNameWithoutExtension(Directory.GetFiles(fullpath)[0]);
                     path_r = Directory.GetFiles(fullpath)[0];
@@ -512,7 +476,7 @@ namespace CyanVideos
                     
                     try
                     {
-                        if (Program.IsVideo(path) || Program.GetAllVideos(Directory.GetFiles(path)).Length == 0) { path = Directory.GetParent(path).FullName; sharedFolder = true; }
+                        if (Program.IsVideo(path) || Program.GetAllVideos(path).Length == 0) { path = Directory.GetParent(path).FullName; sharedFolder = true; }
                     }
                     catch (Exception e) { path = Directory.GetParent(path).FullName; sharedFolder = true; Console.WriteLine("Exception from GetImagePath: "+e.Message); }
                     
@@ -541,7 +505,7 @@ namespace CyanVideos
                                     
                                 }
                             }
-                            catch (Exception) { Console.WriteLine("eheh2"); }
+                            catch (Exception) { }
                             path = Directory.GetParent(path).FullName;
                             //if (File.Exists(path + @"\imagefromPowerVideos.jpg")) { found = true; imagePath = path + @"\imagefromPowerVideos.jpg"; }
                         }
@@ -600,15 +564,14 @@ namespace CyanVideos
         static string working_on = "";
         public static void TakeSnap(Object state)
         {
-            //Console.WriteLine("1 " + Serialize(imagesSnapping));
             if (imagesSnapping.Count == 0) { working_on = ""; LoadSegments.Change(200, System.Threading.Timeout.Infinite); return; }
             //Console.WriteLine("2 " + Serialize(imagesSnapping));
             if (working_on == imagesSnapping[0].fullpath) { LoadSegments.Change(200, System.Threading.Timeout.Infinite); return; }
 
             string fullpath = "";
-            if (!Program.IsVideo(imagesSnapping[0].fullpath) && Program.GetAllVideos(Directory.GetFiles(imagesSnapping[0].fullpath)).Count() == 1)
+            if (!Program.IsVideo(imagesSnapping[0].fullpath) && Program.GetAllVideos(imagesSnapping[0].fullpath).Count() == 1)
             {
-                fullpath = Program.GetAllVideos(Directory.GetFiles(imagesSnapping[0].fullpath))[0];
+                fullpath = Program.GetAllVideos(imagesSnapping[0].fullpath)[0];
             }
             else fullpath = imagesSnapping[0].fullpath;
 
@@ -636,14 +599,15 @@ namespace CyanVideos
 
                 Bitmap bitmap = reader.ReadVideoFrame();
                 result = Directory.GetParent(fullpath).FullName + @"\imagefromPowerVideos_" + Path.GetFileNameWithoutExtension(fullpath) + ".bmp";
-                bitmap.Save(result);
-                imagesSnapping[0].imagePath = result;
-                Program.Compress(result, "", (int)(Program.defaultIconHeight * Window.prop_width_height) * 2 + Window.intraDistanceX, Program.defaultIconHeight);
-                imagesSnapping[0].SetImage();
-                Console.WriteLine("Remove!");
-                imagesSnapping.RemoveAt(0);
-            
+                if (bitmap != null)
+                {
+                    bitmap.Save(result);
+                    imagesSnapping[0].imagePath = result;
+                    Program.Compress(result, "", (int)(Program.defaultIconHeight * Window.prop_width_height) * 2 + Window.intraDistanceX, Program.defaultIconHeight);
+                    imagesSnapping[0].SetImage();
+                    imagesSnapping.RemoveAt(0);
                 }
+            }
             catch (Exception) { imagesSnapping.RemoveAt(0); }
             LoadSegments.Change(200, System.Threading.Timeout.Infinite);
 
@@ -652,32 +616,40 @@ namespace CyanVideos
         public void ClickEvent(object sender, MouseEventArgs e)
         {
             if (e!= null && e.Button == MouseButtons.Right) return;
-            else if(allowClick)
+            else if (allowClick)
             {
+                Console.WriteLine("ClickEvent");
                 pauseFromClick.Enabled = true;
                 pauseFromClick.Tick += (o, exa) => { allowClick = true; pauseFromClick.Enabled = false;};
                 ClickIconxx(this);
-                allowClick = false;
+                // allowClick = false;
             }
             return;
         }
         public static void ClickIconxx(Iconxx icon)
         {
+            Console.WriteLine("ClickIconxx");
             MediaPanel.PlayList.Clear();
             Program.win.mediaPanel.numFilm = 0;
             string[] directories = new string[0];
+            Program.EnableLoading();
             try
             {
                 directories = Directory.GetDirectories(icon.fullpath);
-                if (directories.Length > 0)
+                Console.WriteLine(Program.GetAllVideos(icon.fullpath, 10).Length);
+                if ((icon.series && Program.GetAllVideos(icon.fullpath, 10).Length > 1) ||
+                    (!icon.series && isFolder(icon.fullpath, false)))
                 {
-                    Program.EnableLoading();
                     PreparePanel2(icon.fullpath, icon.series);
+
                     if (Program.win.ricerca.Visible) Program.win.OpenRicerca_Click(null, null);
                     Program.EnableLoading(false);
                     return;
                 }
-                else if (!icon.series) {icon.StartApp();  return; }
+                else if (!icon.series) {
+                    icon.StartApp();
+                    Program.EnableLoading(false);
+                    return; }
             }
             catch (Exception) { Console.WriteLine("Exception from ClickIconxx1"); Program.EnableLoading(false); if (!icon.series) { return; } }
             Program.EnableLoading(false);
@@ -685,35 +657,39 @@ namespace CyanVideos
             if (icon.series)
             {
                 //          icon.fullpath = folder (father)  
-
-                try { directories = Program.GetAllVideos(Directory.GetFiles(icon.fullpath)); }  // directories = all videos in folder
-                catch (Exception)
+                if (Program.IsVideo(icon.fullpath))
                 {
-                    Console.WriteLine("Exception from ClickIconxx2");                    // If folder is a video starts the video
                     foreach (string extension in Program.videoExtensions)
                     {
                         if (icon.fullpath.Substring(icon.fullpath.Length - 5).ToLower().Contains("." + extension))
                         {
-                            if (Properties.Settings.Default.internalPlayer && Program.VLC_Installed
-                                ) { LoadSeries(icon.fullpath); }
+                            if (Properties.Settings.Default.internalPlayer && Program.VLC_Installed) { LoadSeries(icon.fullpath); }
                             else System.Diagnostics.Process.Start(icon.fullpath);
                         }
                     }
+                    return;
                 }
-                if (directories.Length > 1)                                        // if there are multiple videos opens the sec panel
+                else
                 {
                     Program.EnableLoading();
-                    PreparePanel2(icon.fullpath, icon.series, icon.series);
+                    string[] videos = Program.GetAllVideos(icon.fullpath, 5);
+                    foreach (string video in videos) Console.WriteLine(video);
+                    if (videos.Length > 1)                                        // if there are multiple videos opens the sec panel
+                    {
+                        PreparePanel2(icon.fullpath, icon.series, icon.series);
+                    }
+                    else if (videos.Length == 1)                                                             // else starts the video
+                    {
+                        if (Properties.Settings.Default.internalPlayer && Program.VLC_Installed) LoadSeries(videos[0]);
+                        else System.Diagnostics.Process.Start(videos[0]);
+                        
+                    }
+                    else { 
+                        MessageBox.Show("Videos not found!"); 
+                    }
                     Program.EnableLoading(false);
                 }
-                else                                                               // else starts the video
-                {
-                    if (Properties.Settings.Default.internalPlayer && Program.VLC_Installed
-                        )
-                        LoadSeries(directories[0]);
-                    else System.Diagnostics.Process.Start(directories[0]);
-                    Program.EnableLoading(false);
-                }
+                
             }
         }
         public static void LoadSeries(string FilePath)
@@ -721,12 +697,11 @@ namespace CyanVideos
             //MediaPanel.PlayList.Clear();
             foreach (string path in Ordering.OrderAlphanumeric(GetSeriesEpisodes(FilePath).ToArray()))
             {
-                string seriesName = "";
-                seriesName = FindTopInfo(path).title;
+                string seriesName = FindTopInfo(path).title;
                 if (seriesName == "AsItIsPowerVideos" || seriesName == "NotFoundPowerVideos") seriesName = "";
                 if (seriesName != "") seriesName += " - ";
-
-                MediaPanel.PlayList.Add(new Vision(path, seriesName + Path.GetFileNameWithoutExtension(path)));
+                string str_n = Program.CleanZeros(Path.GetFileName(Path.GetDirectoryName(path)));
+                MediaPanel.PlayList.Add(new Vision(path, seriesName + Path.GetFileNameWithoutExtension(path) + " - " + str_n));
             }
             for (int i = 0; i < MediaPanel.PlayList.Count; i++)
                 if (MediaPanel.PlayList[i].filename == FilePath)
@@ -738,7 +713,6 @@ namespace CyanVideos
         public static List<string> GetSeriesEpisodes(string path)
         {
             List<string> lista = new List<string>();
-            //Console.WriteLine("Finding all episodes for " + path);
             string parentPath = path;
             for (int i = 0; i<1; )
             {
@@ -747,7 +721,7 @@ namespace CyanVideos
                 foreach (Source source in Window.Sources) if (parentPath == source.directory) { i = 1; break; };
             }
             string firstPath = path;
-            AddToList(firstPath, lista);
+            lista.AddRange(Program.GetAllVideos(path, 10));
             return lista;
         }
         public static void GetFirstSubImage(string path, List<string> listAdd, int iteration = 0)
@@ -760,7 +734,6 @@ namespace CyanVideos
             {
                 foreach (string dir in directories)
                 {
-                    //Console.WriteLine(dir);
                     try { GetFirstSubImage(dir, listAdd, iteration + 1); } catch (Exception) { }
                 }
             }
@@ -782,12 +755,12 @@ namespace CyanVideos
                     try { AddToList(dir, listAdd, iteration+1); } catch (Exception) { }
                 }
             }
-            else listAdd.AddRange(Program.GetAllVideos(Directory.GetFiles(path)));
+            else listAdd.AddRange(Program.GetAllVideos(path, 10));
         }
         public static void ClickIconxx(string fullpath, bool series)
         {
             string[] directories = new string[0];
-            try { directories = Directory.GetDirectories(fullpath); } catch (Exception ex) { MessageBox.Show("Non è stata trovata alcuna corrispondenza: "+ ex.Message); return; }
+            try { directories = Directory.GetDirectories(fullpath); } catch (Exception ex) { MessageBox.Show("No match has been found: "+ ex.Message); return; }
             if (directories.Length > 0)
             {
                 PreparePanel2(fullpath, series);
@@ -795,10 +768,18 @@ namespace CyanVideos
         }
         private static void PreparePanel2(string fullpath, bool series=false, bool extremis_series = false)
         {
-            //Console.WriteLine("Clicked on: " + fullpath);
+            Program.win.OpenRicerca_Click(true, false);
+            Program.win.firstpanel.Refresh(true, true, true);
+            Source source = new Source(fullpath, Program.CleanName(Path.GetFileNameWithoutExtension(fullpath)), series, extremis_series);
+            if (source.Icons().Count == 0)
+            {
+                MessageBox.Show("This folder is empty!");
+                Program.EnableLoading(false);
+                return;
+            }
             Program.win.DisposeDeepSource();
+            Program.win.DeepSource = source;
             Program.win.secondpanel.ToFront();
-            Program.win.DeepSource = new Source(fullpath, CleanName(Path.GetFileNameWithoutExtension(fullpath)), series, extremis_series);
             Program.win.ResizePanel2();
             Program.win.secondpanel.Refresh(true);
         }
@@ -827,17 +808,17 @@ namespace CyanVideos
                         if (file.Substring(file.Length-5).ToLower().Contains("." + extension)) { count++; filename = file; }
                     }
                 }
-                if (count == 0) { Program.EnableLoading(false); MessageBox.Show("Nessun file video trovato"); return; }
-                if (count > 1) { Program.EnableLoading(false); MessageBox.Show("Le cartelle devono contenere un solo file video"); return; }
+                if (count == 0) { Program.EnableLoading(false); MessageBox.Show("No video found"); return; }
+                if (count > 1) { Program.EnableLoading(false); MessageBox.Show("Folders must contain only one video file"); return; }
             }
-            catch (Exception) { Program.EnableLoading(false); MessageBox.Show("Errore nel recuperare le informazioni dalla directory"); return; }
+            catch (Exception) { Program.EnableLoading(false); MessageBox.Show("Error while fetching information from directory"); return; }
             //Program.win.WindowState = FormWindowState.Minimized;
             if (filename == "") return;
             if (Properties.Settings.Default.internalPlayer && Program.VLC_Installed
                 )
             {
                 //MediaPanel.PlayList.Clear();
-                string header = CleanName(Path.GetFileNameWithoutExtension(filename));
+                string header = Program.CleanName(Path.GetFileNameWithoutExtension(filename));
                 INFO info = GetINFO(Directory.GetParent(filename) + @"\infopowervideos.txt");
                 if (info.title != "" && info.title != "AsItIsPowerVideos" && info.title != "NotFoundPowerVideos") header = info.title;
                 MediaPanel.PlayList.Add(new Vision(filename, header));
@@ -895,7 +876,7 @@ namespace CyanVideos
                     else sec_films.Add(film);
                 }
             }
-            catch (Exception e) { Console.WriteLine("Errore da GetData - " + e.Message); return; }
+            catch (Exception e) { Console.WriteLine("Exception GetData - " + e.Message); return; }
         }
 
         public static Film GetPrincipalFilm(string info_path)
@@ -1022,7 +1003,7 @@ namespace CyanVideos
                 info.path = info_path;
                 return info;
             }
-            catch (Exception e) { Console.WriteLine("Errore da GetData - " + e.Message); return new INFO(); }
+            catch (Exception e) { Console.WriteLine("Exception GetData - " + e.Message); return new INFO(); }
         }
         public static INFO FindTopInfo(string path)
         {

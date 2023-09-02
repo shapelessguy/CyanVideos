@@ -99,7 +99,7 @@ namespace CyanVideos
                     researching = true;
                     Program.win.firstpanel.Refresh(true);
                     Program.win.Research_Categories.Clear();
-                    Console.WriteLine("EndResearch");
+                    Console.WriteLine("EndSearch");
                     researching = false;
                     Program.win.ricerca.FindingHide();
                     Program.EnableLoading(false);
@@ -192,25 +192,25 @@ namespace CyanVideos
                         }
                     }
                 }
-                if(Program.win.Research_Categories.Count==0) researchSource = new Source("La ricerca non ha prodotto risultati.", "La ricerca non ha prodotto risultati.", Program.win.Research_Categories);
+                if(Program.win.Research_Categories.Count==0) researchSource = new Source("No results out of the search.", "No results out of the search.", Program.win.Research_Categories);
                 else
                 {
                     foreach (Iconxx icon in Program.win.Research_Categories) icon.Check_Image();
                     Program.win.Research_Categories = Program.win.Research_Categories.OrderBy(o => o.title).ToList();
                     text = Program.win.hintText.Text;
-                    string displayText = "Risultati per: " + text+" ";
-                    if (TextNull(text, PanelResearch.null_values)) displayText = "Risultati ";
-                    if (ResearchClass.StrangeDeepResearch()) displayText += "mediante filtro";
+                    string displayText = "Results for: " + text + " ";
+                    if (TextNull(text, PanelResearch.null_values)) displayText = "Results ";
+                    if (ResearchClass.StrangeDeepResearch()) displayText += "with filter";
                     displayText += " (" + Program.win.Research_Categories.Count + ")";
                     researchSource = new Source(displayText, displayText, Program.win.Research_Categories);
                 }
                 icons_pending = true;
                 researching = false;
                 Program.win.firstpanel.Refresh();
-                Console.WriteLine("EndResearch");
+                Console.WriteLine("EndSearch");
                 Program.EnableLoading(false);
             }
-            catch (Exception) { researching = false; Program.EnableLoading(false); Console.WriteLine("Exception from Research in Supervisor"); }
+            catch (Exception) { researching = false; Program.EnableLoading(false); Console.WriteLine("Exception from Search in Supervisor"); }
         }
         private static string[] DirWithoutSeries(string path)
         {
@@ -227,10 +227,9 @@ namespace CyanVideos
             try
             {
                 string name = dir.Substring(1 + dir.LastIndexOf("/"));
-                name = Iconxx.CleanName(name);
-                Film film = Iconxx.GetPrincipalFilm(dir + @"\infopowervideos.txt");
+                name = Program.CleanName(name);
                 //if (!Compatible(name, text, film) && !TextNull(text, PanelResearch.null_values)) { return false; }
-                if (!Program.win.ricerca.Filter(film, dir, ResearchClass.actualResearch)) { return false; }
+                if (!Program.win.ricerca.Filter(null, dir, ResearchClass.actualResearch)) { return false; }
                 int dim = Window.standard.Height;
                 if (!forceDimIcon) dim = 0;
                 Iconxx iconxx = new Iconxx(Directory.GetParent(dir).FullName, dir, false, dim);
@@ -255,7 +254,7 @@ namespace CyanVideos
 
         public static void ResearchINFOS()
         {
-            Console.WriteLine("Researching infos");
+            Console.WriteLine("Searching infos");
             Dictionary<string, int> infoList = new Dictionary<string, int>();
             foreach (Source source in Window.Sources)
             {
@@ -419,7 +418,6 @@ namespace CyanVideos
 
             List<string> ListContains(List<List<string>> container, List<string> list2)
             {
-                bool output = false;
                 foreach(List<string> list1 in container)
                 {
                     if (list1.SequenceEqual(list2)) return list1;

@@ -46,7 +46,12 @@ namespace CyanVideos
             Location = new Point(-1,-1);
             Size = new Size(1,1);
             if (level == 1) BackColor = Color.Black;
-            else BackColor = Color.FromArgb(10,10,10);
+            else
+            {
+                BackgroundImage = Properties.Resources.Background;
+                //BackColor = Color.Transparent;
+                // BackColor = Color.FromArgb(10, 10, 10);
+            }
 
             Paint += new PaintEventHandler(Power_Paint);
             if (level == 2) LocationChanged += (o, e) => { //Console.WriteLine(Bounds);
@@ -67,8 +72,11 @@ namespace CyanVideos
                 //BackColor = Color.Red,
                 BackgroundImageLayout = ImageLayout.Stretch,
             };
-            //if (level == 1) Scrollbar.BackgroundImage = Properties.Resources.Scrollbar24;
-            //else Scrollbar.BackgroundImage = Properties.Resources.Scrollbar8;
+            if (level != 1)
+            {
+                Scrollbar.Location = new Point(Width - 50, 50);
+                Scrollbar.Size = new Size(40, Height - 80);
+            }
             Controls.Add(Scrollbar);
             EnableControls();
             //if (level == 2) EnableControls();
@@ -478,7 +486,7 @@ namespace CyanVideos
                         else
                         {
                             string text = "";
-                            if (i == 1) text = "Films"; else text = "Series";
+                            if (i == 1) text = "Movies"; else text = "Series";
                             DrawText(text, leftmargin, locationy, RealWidth, SourceTag.height, i);
                         }
                         locationy += SourceTag.height + intraDistanceY;
@@ -844,6 +852,7 @@ namespace CyanVideos
         Point location;
         private void ClickReally(object sender, EventArgs e)
         {
+            Console.WriteLine("Real Click");
             timerClick.Dispose();
             try
             {
@@ -861,11 +870,16 @@ namespace CyanVideos
                         else if (draw.Continue.Contains(location) && reallyTooltiped) { draw.Icon.ContinueToWatch.ClickEvent(sender, null); }
                         else if (draw.ExtraRect.Contains(location) && reallyTooltiped) { draw.Icon.Info(null, null); draw.tooltiped = false; }
                         else if (draw.ChangeImageRect.Contains(location) && reallyTooltiped) { draw.Icon.Check_SubFolders(true); draw.tooltiped = false; }
-                        else { if (level == 1) fatherPanel2 = draw.Icon.fullpath; draw.Icon.ClickEvent(null, null); }
+                        else { 
+                            if (level == 1) { fatherPanel2 = draw.Icon.fullpath;} 
+                            draw.Icon.ClickEvent(null, null);  }
                     }
                 }
             }
-            catch (Exception) { Console.WriteLine("Exception raised by Mouse_Click in MyPanel"); }
+            catch (Exception ex) { 
+                Console.WriteLine("Exception raised by Mouse_Click in MyPanel");
+                Console.WriteLine(ex.Message);
+            }
         }
         private void Double_Click(object sender, EventArgs e)
         {
@@ -886,7 +900,7 @@ namespace CyanVideos
         }
         public void Refresh(bool paint = false, bool onlyLocation = false, bool refreshLabel = false)
         {
-            Console.WriteLine("paint:"+paint + " onlyLocation:"+onlyLocation + " refreshLabel:"+ refreshLabel);
+            // Console.WriteLine("paint:"+paint + " onlyLocation:"+onlyLocation + " refreshLabel:"+ refreshLabel);
             if (onlyLocation) paint = true;
             int prev_bias = bias;
             if (paint) { if (level == 1) { this.paint = paint; this.refreshLabel = refreshLabel; } else this.paint2 = paint; }// bias = 0; }
@@ -901,7 +915,11 @@ namespace CyanVideos
         {
             try
             {
-                foreach (Drawning draw in ToDraw) if (draw.Icon != null) if (!draw.Icon.image_validated) { Console.WriteLine("Validating: "+draw.Icon.title); draw.ValidateImage(); }
+                foreach (Drawning draw in ToDraw) 
+                    if (draw.Icon != null) 
+                        if (!draw.Icon.image_validated) { 
+                            Console.WriteLine("Validating: "+draw.Icon.title); draw.ValidateImage(); 
+                        }
                 previous_drawn = null;
                 Invalidate();
             }
