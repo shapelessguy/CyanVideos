@@ -77,24 +77,43 @@ namespace CyanVideos
             Previous.Click += (o, e) => { Program.win.QuitMediaPanel(); };
             
             audioSwitch = new Label() { AutoSize = false, BackColor = Color.Transparent, Size = standarsSize1 };
-            menuAudio = new MenuStrip() { AutoSize = false, Size = standarsSize1, BackgroundImageLayout = ImageLayout.Stretch, BackgroundImage = Properties.Resources.audio, };
+            menuAudio = new MenuStrip() { 
+                AutoSize = false, 
+                Size = standarsSize1, 
+                BackgroundImageLayout = ImageLayout.Stretch, 
+                BackgroundImage = Properties.Resources.audio, 
+            };
             menuAudio.MouseEnter += (o, e) => { if (toolMenuAudio.DropDownItems.Count == 0) return; menuAudio.BackgroundImage = Properties.Resources.audioH; };
             menuAudio.MouseLeave += (o, e) => { menuAudio.BackgroundImage = Properties.Resources.audio; };
             menuAudio.DefaultDropDownDirection = ToolStripDropDownDirection.AboveRight;
             Controls.Add(audioSwitch);
             audioSwitch.Controls.Add(menuAudio);
-            toolMenuAudio = new ToolStripMenuItem() { Text = "  " };
+            toolMenuAudio = new ToolStripMenuItem()
+            {
+                Dock = DockStyle.Fill,
+                Text = "     " 
+            };
             menuAudio.Items.Add(toolMenuAudio);
             menuAudio.Renderer = new MyRenderer();
 
             subSwitch = new Label() { AutoSize = false, BackColor = Color.Transparent, Size = standarsSize1 };
-            menuSub = new MenuStrip() { Dock = DockStyle.Fill, AutoSize = false, BackColor = Color.Transparent, Size = standarsSize1, BackgroundImageLayout = ImageLayout.Stretch, BackgroundImage = Properties.Resources.sub, };
+            menuSub = new MenuStrip() { 
+                Dock = DockStyle.Fill, 
+                AutoSize = false, 
+                BackColor = Color.Transparent, 
+                Size = standarsSize1, 
+                BackgroundImageLayout = ImageLayout.Stretch, 
+                BackgroundImage = Properties.Resources.sub
+            };
             menuSub.MouseEnter += (o, e) => { if (toolMenuSub.DropDownItems.Count == 0) return; menuSub.BackgroundImage = Properties.Resources.subH; };
             menuSub.MouseLeave += (o, e) => { menuSub.BackgroundImage = Properties.Resources.sub; };
             menuSub.DefaultDropDownDirection = ToolStripDropDownDirection.AboveRight;
             Controls.Add(subSwitch);
             subSwitch.Controls.Add(menuSub);
-            toolMenuSub = new ToolStripMenuItem() {Dock = DockStyle.Fill, Text = "  " };
+            toolMenuSub = new ToolStripMenuItem() {
+                Dock = DockStyle.Fill,
+                Text = "     ",
+            };
             menuSub.Items.Add(toolMenuSub);
             menuSub.Renderer = new MyRenderer();
 

@@ -166,9 +166,11 @@ namespace CyanVideos
                 List<ToolStripMenuItem> listMenuAudio = new List<ToolStripMenuItem>();
 
                 Dictionary<int, string> audioTrack = new Dictionary<int, string>();
+                List<string> audioTracks = new List<string>();
                 foreach (var audio in media.Audio.Tracks.All)
                 {
-                    if (audio.ID != -1) audioTrack.Add(audio.ID, audio.Name);
+                    if (audio.ID != -1 && !audioTracks.Contains(audio.Name)) audioTrack.Add(audio.ID, audio.Name);
+                    audioTracks.Add(audio.Name);
                 }
                 foreach (var item in audioTrack)
                 {

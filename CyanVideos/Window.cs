@@ -102,6 +102,7 @@ namespace CyanVideos
             DoubleBuffered = true;
             CheckForIllegalCrossThreadCalls = false;
             InitializeComponent();
+            add_source.Text = "Add Movies";
             addSourceSeries.Text = "Add Series";
             update_source.Text = "Update";
             visualizzaControversieToolStripMenuItem.Text = "Show issues";
@@ -113,7 +114,7 @@ namespace CyanVideos
             monitorPredefinitoToolStripMenuItem.Text = "Default screen";
             internalPlayer.Text = "Internal player";
             consigliaStrutturaToolStripMenuItem.Text = "Suggest structure";
-            languageTagsToolStripMenuItem.Text = "Language TAGS";
+            languageTagsToolStripMenuItem.Text = "Manage TAGS";
             Menu.Visible = false;
             Menu.Renderer = new MyRenderer();
             ClientSize = new Size(Program.defaultScreen.Bounds.Size.Width / 2, Program.defaultScreen.Bounds.Size.Height / 2);
@@ -767,14 +768,15 @@ namespace CyanVideos
         {
             RefreshMenu();
         }
-        List<ToolStripMenuItem> listMenu = new List<ToolStripMenuItem>();
+        List<ToolStripMenuItem> listMenu;
         private void RefreshMenu()
         {
-            listMenu.Clear();
-            this.monitorPredefinitoToolStripMenuItem.DropDownItems.Clear();
-            foreach (string screen_id in Program.monitors.getIds()) 
-            { 
+            listMenu = new List<ToolStripMenuItem>();
+            monitorPredefinitoToolStripMenuItem.DropDownItems.Clear();
+            foreach (string screen_id in Program.monitors.getIds())
+            {
                 Screen screen = Program.monitors.getScreen(screen_id);
+                if (screen == null) continue;
                 ToolStripMenuItem neww;
                 string screenName = ScreenClass.GetScreenName(screen);
                 listMenu.Add(neww = new ToolStripMenuItem()
@@ -782,21 +784,19 @@ namespace CyanVideos
                     BackColor = Color.Black,
                     CheckOnClick = true,
                     Checked = screen == Program.defaultScreen,
-                    ForeColor = System.Drawing.Color.White,
+                    ForeColor = Color.White,
                     Name = screen_id,
-                    Size = new System.Drawing.Size(190, 24),
+                    Size = new Size(190, 24),
                     Text = screen_id + "  (" + screen.Bounds.Width + " x " + screen.Bounds.Height + ")",
                 });
-                neww.Click += new System.EventHandler(SetDefaultMonitor);
+                neww.Click += new EventHandler(SetDefaultMonitor);
             }
-            
             ToolStripMenuItem[] array = listMenu.ToArray();
-            this.monitorPredefinitoToolStripMenuItem.DropDownItems.AddRange(array);
+            monitorPredefinitoToolStripMenuItem.DropDownItems.AddRange(array);
 
-
-            this.soloFilmToolStripMenuItem.Checked = Properties.Settings.Default.valore_mostra == 1;
-            this.soloSerieTVToolStripMenuItem.Checked = Properties.Settings.Default.valore_mostra == 2;
-            this.tuttoToolStripMenuItem.Checked = Properties.Settings.Default.valore_mostra == 3;
+            soloFilmToolStripMenuItem.Checked = Properties.Settings.Default.valore_mostra == 1;
+            soloSerieTVToolStripMenuItem.Checked = Properties.Settings.Default.valore_mostra == 2;
+            tuttoToolStripMenuItem.Checked = Properties.Settings.Default.valore_mostra == 3;
         }
         private void SetDefaultMonitor(object sender, EventArgs e)
         {

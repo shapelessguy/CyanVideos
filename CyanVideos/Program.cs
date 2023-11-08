@@ -5,6 +5,7 @@ using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -43,7 +44,7 @@ namespace CyanVideos
         [STAThread]
         static void Main()
         {
-            monitors = MonitorCollection.getMonitorConfiguration();
+            monitors = MonitorCollection.getMonitorConfiguration(Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "MultiMonitorTool"));
             Application.SetUnhandledExceptionMode(UnhandledExceptionMode.CatchException);
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
@@ -120,15 +121,23 @@ namespace CyanVideos
         {
             string foundScreen = "";
 
-            foreach (string screen_id in monitors.getIds()) if (screen_id == Properties.Settings.Default.defDevice)
-                {
-                    foundScreen = screen_id;
-                }
-            if (foundScreen == "")
+            if (monitors.getIds().Length != 0)
             {
-                foundScreen = monitors.getIds()[0];
+                foreach (string screen_id in monitors.getIds()) if (screen_id == Properties.Settings.Default.defDevice)
+                    {
+                        foundScreen = screen_id;
+                    }
+                if (foundScreen == "")
+                {
+                    foundScreen = monitors.getIds()[0];
+                }
+                defaultScreen = monitors.getScreen(foundScreen);
             }
-            defaultScreen = monitors.getScreen(foundScreen);
+            else
+            {
+                foundScreen = "";
+                defaultScreen = Screen.PrimaryScreen;
+            }
             Properties.Settings.Default.defDevice = foundScreen;
             Properties.Settings.Default.Save();
         }

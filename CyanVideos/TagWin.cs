@@ -62,6 +62,7 @@ namespace CyanVideos
             {
                 textBox1.Text = "";
                 tags.Add(name);
+                PanelResearch.new_tag = true;
                 Save();
             }
         }
@@ -93,6 +94,7 @@ namespace CyanVideos
                 }
             }
             Reshape();
+            PanelResearch.new_tag = true;
             Save();
         }
         private void LoadTags()
@@ -103,6 +105,15 @@ namespace CyanVideos
         {
             Properties.Settings.Default.tags = string.Join("|-.-|", tags);
             Properties.Settings.Default.Save();
+        }
+
+        private void textBox1_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Enter)
+            {
+                e.SuppressKeyPress = true;
+                button1_Click(sender, e);
+            }
         }
     }
 }

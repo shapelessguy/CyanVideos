@@ -11,55 +11,62 @@ namespace CyanVideos.MultiMonitorTool
     public class MonitorCollection
     {
         //    API CALLS    ----------------------------------------------------------------------------------------------------------------------
-        public static MonitorCollection getMonitorConfiguration()
+        public static MonitorCollection getMonitorConfiguration(string multimonitorDirectory)
         {
-            string multimonitorDirectory = Path.Combine(Environment.CurrentDirectory, "MultiMonitorTool");
-            string multimonitorExe = Path.Combine(multimonitorDirectory, "MultiMonitorTool.exe");
-            string conf_path = Path.Combine(multimonitorDirectory, "multimonitor.cfg");
-            cmdAsync(multimonitorExe, "/SaveConfig \"" + conf_path + "\"");
-
-            string[] lines = null;
-            for (int i = 0; i < 20; i++)
+            try
             {
-                if (!SeasonEditor.Action.IsFileLocked(new FileInfo(conf_path)))
+                string multimonitorExe = Path.Combine(multimonitorDirectory, "MultiMonitorTool.exe");
+                string conf_path = Path.Combine(multimonitorDirectory, "multimonitor.cfg");
+                cmdAsync(multimonitorExe, "/SaveConfig \"" + conf_path + "\"");
+                string[] lines = null;
+                for (int i = 0; i < 20; i++)
                 {
-                    lines = File.ReadAllLines(conf_path);
-                    for (int j = 0; j < 20; j++)
+                    if (File.Exists(conf_path) && !SeasonEditor.Action.IsFileLocked(new FileInfo(conf_path)))
                     {
-                        if (!SeasonEditor.Action.IsFileLocked(new FileInfo(conf_path)))
+                        lines = File.ReadAllLines(conf_path);
+                        for (int j = 0; j < 20; j++)
                         {
-                            File.Delete(conf_path);
-                            Console.WriteLine("Deleting conf file");
-                            break;
+                            if (!SeasonEditor.Action.IsFileLocked(new FileInfo(conf_path)))
+                            {
+                                File.Delete(conf_path);
+                                Console.WriteLine("Deleting conf file");
+                                break;
+                            }
+                            Thread.Sleep(100);
                         }
-                        Thread.Sleep(100);
+                        break;
                     }
-                    break;
+                    Thread.Sleep(100);
                 }
-                Thread.Sleep(100);
-            }
 
-            MonitorCollection monitors = new MonitorCollection();
-            if (lines != null)
-            {
-                List<string> monitor_gen = new List<string>();
-                foreach (var line in lines)
+                MonitorCollection monitors = new MonitorCollection();
+                if (lines != null)
                 {
-                    if (line.StartsWith("["))
+                    List<string> monitor_gen = new List<string>();
+                    foreach (var line in lines)
                     {
-                        Monitor.Add(monitor_gen, monitors);
-                        monitor_gen = new List<string>();
+                        if (line.StartsWith("["))
+                        {
+                            Monitor.Add(monitor_gen, monitors);
+                            monitor_gen = new List<string>();
+                        }
+                        else
+                        {
+                            monitor_gen.Add(line.Substring(line.IndexOf("=") + 1));
+                        }
                     }
-                    else
-                    {
-                        monitor_gen.Add(line.Substring(line.IndexOf("=") + 1));
-                    }
+                    Monitor.Add(monitor_gen, monitors);
                 }
-                Monitor.Add(monitor_gen, monitors);
+                monitors.Order();
+                monitors.ValidateIds();
+                foreach (Monitor m in monitors.GetAll()) m.print();
+                return monitors;
             }
-            monitors.Order();
-            monitors.ValidateIds();
-            return monitors;
+            catch 
+            {
+                MessageBox.Show("Error while fetching Monitor configuration");
+                return new MonitorCollection();
+            }
         }
         public List<Monitor> GetAll()
         {
@@ -110,19 +117,22 @@ namespace CyanVideos.MultiMonitorTool
                 this.y = y;
             }
 
-            public void print()
+            public string print()
             {
-                Console.WriteLine(name);
-                Console.WriteLine("\tScreen: " + screen);
-                Console.WriteLine("\tID: " + id);
-                Console.WriteLine("\tBits per Pixel: " + bpp);
-                Console.WriteLine("\tWidth: " + width);
-                Console.WriteLine("\tHeight: " + height);
-                Console.WriteLine("\tDisplay flags: " + display_flags);
-                Console.WriteLine("\tDisplat frequency: " + display_freq);
-                Console.WriteLine("\tDisplay orientation: " + display_orient);
-                Console.WriteLine("\tPosition X: " + x);
-                Console.WriteLine("\tPosition Y: " + y);
+                string output = "";
+                output += name + "\n";
+                output += "\tScreen: " + screen + "\n";
+                output += "\tID: " + id + "\n";
+                output += "\tBits per Pixel: " + bpp + "\n";
+                output += "\tWidth: " + width + "\n";
+                output += "\tHeight: " + height + "\n";
+                output += "\tDisplay flags: " + display_flags + "\n";
+                output += "\tDisplat frequency: " + display_freq + "\n";
+                output += "\tDisplay orientation: " + display_orient + "\n";
+                output += "\tPosition X: " + x + "\n";
+                output += "\tPosition Y: " + y + "\n";
+                Console.WriteLine(output);
+                return output;
             }
 
             public static void Add(List<string> monitor_gen, MonitorCollection list_monitors)
@@ -205,7 +215,7 @@ namespace CyanVideos.MultiMonitorTool
                     using (StreamReader reader = process.StandardOutput)
                     {
                         string result = reader.ReadToEnd();
-                        Console.Write(result);
+                        Console.WriteLine(result);
                     }
                 }
             }

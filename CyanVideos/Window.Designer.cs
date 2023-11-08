@@ -100,7 +100,6 @@ namespace CyanVideos
             this.add_source.ForeColor = System.Drawing.Color.White;
             this.add_source.Name = "add_source";
             this.add_source.Size = new System.Drawing.Size(293, 24);
-            this.add_source.Text = "Aggiungi fonte film";
             this.add_source.Click += new System.EventHandler(this.AddSource);
             // 
             // addSourceSeries

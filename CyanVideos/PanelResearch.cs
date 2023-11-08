@@ -16,7 +16,7 @@ namespace CyanVideos
         static public bool new_genre = false;
         static public bool new_role = false;
         static public bool new_tag = true;
-        private Timer timer, only_checked, time;
+        private Timer timer, timer2, only_checked, time;
         public CheckedListBox listbox;
         public CheckedListBox rolebox;
         public CheckedListBox tagbox;
@@ -203,7 +203,13 @@ namespace CyanVideos
                 Enabled = true,
                 Interval = 5000,
             };
-            timer.Tick += CheckGenres_Tags;
+            timer.Tick += CheckGenres;
+            timer2 = new Timer()
+            {
+                Enabled = true,
+                Interval = 500,
+            };
+            timer2.Tick += CheckTags;
             only_checked = new Timer()
             {
                 Enabled = true,
@@ -393,7 +399,7 @@ namespace CyanVideos
             return output;
         }
 
-        private void CheckGenres_Tags(object sender, EventArgs e)
+        private void CheckGenres(object sender, EventArgs e)
         {
             try
             {
@@ -412,7 +418,13 @@ namespace CyanVideos
                     rolebox.Items.AddRange(okRoles.ToArray());
                     new_role = false;
                 }
-
+            }
+            catch (Exception) { }
+        }
+        private void CheckTags(object sender, EventArgs e)
+        {
+            try
+            {
                 if (new_tag)
                 {
                     List<string> tags = Properties.Settings.Default.tags.Split(new string[] { "|-.-|" }, System.StringSplitOptions.RemoveEmptyEntries).ToList();
@@ -422,7 +434,6 @@ namespace CyanVideos
                 }
             }
             catch (Exception) { }
-
         }
 
         int last_checked;

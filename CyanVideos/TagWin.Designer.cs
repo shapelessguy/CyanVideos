@@ -37,8 +37,9 @@
             // 
             // panel1
             // 
+            this.panel1.AutoScroll = true;
             this.panel1.BackColor = System.Drawing.Color.Black;
-            this.panel1.Location = new System.Drawing.Point(193, 33);
+            this.panel1.Location = new System.Drawing.Point(190, 30);
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(201, 213);
             this.panel1.TabIndex = 0;
@@ -64,6 +65,7 @@
             this.textBox1.Size = new System.Drawing.Size(122, 21);
             this.textBox1.TabIndex = 2;
             this.textBox1.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.textBox1.KeyDown += new System.Windows.Forms.KeyEventHandler(this.textBox1_KeyDown);
             // 
             // label1
             // 
@@ -87,6 +89,9 @@
             this.Controls.Add(this.button1);
             this.Controls.Add(this.panel1);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+            this.MaximizeBox = false;
+            this.MaximumSize = new System.Drawing.Size(419, 294);
+            this.MinimumSize = new System.Drawing.Size(419, 294);
             this.Name = "TagWin";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Tag Manager";
