@@ -5,10 +5,6 @@ using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
-<<<<<<< HEAD
-=======
-using System.Reflection;
->>>>>>> fe9cbb00a4508453f9405ee283b2bff1a3681d22
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -47,11 +43,7 @@ namespace CyanVideos
         [STAThread]
         static void Main()
         {
-<<<<<<< HEAD
             monitors = MonitorCollection.getMonitorConfiguration();
-=======
-            monitors = MonitorCollection.getMonitorConfiguration(Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "MultiMonitorTool"));
->>>>>>> fe9cbb00a4508453f9405ee283b2bff1a3681d22
             Application.SetUnhandledExceptionMode(UnhandledExceptionMode.CatchException);
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
@@ -89,11 +81,7 @@ namespace CyanVideos
                 Loading.Start();
                 Application.Run(win = new Window());
             }
-<<<<<<< HEAD
             catch (Exception ex) { MessageBox.Show("Errore: " + ex.Message); }
-=======
-            catch (Exception ex) { MessageBox.Show("Error: " + ex.Message + "\n" + ex.ToString()); }
->>>>>>> fe9cbb00a4508453f9405ee283b2bff1a3681d22
         }
         public static void LOADING()
         {
@@ -132,7 +120,6 @@ namespace CyanVideos
         {
             string foundScreen = "";
 
-<<<<<<< HEAD
             foreach (string screen_id in monitors.getIds()) if (screen_id == Properties.Settings.Default.defDevice)
                 {
                     foundScreen = screen_id;
@@ -142,25 +129,6 @@ namespace CyanVideos
                 foundScreen = monitors.getIds()[0];
             }
             defaultScreen = monitors.getScreen(foundScreen);
-=======
-            if (monitors.getIds().Length != 0)
-            {
-                foreach (string screen_id in monitors.getIds()) if (screen_id == Properties.Settings.Default.defDevice)
-                    {
-                        foundScreen = screen_id;
-                    }
-                if (foundScreen == "")
-                {
-                    foundScreen = monitors.getIds()[0];
-                }
-                defaultScreen = monitors.getScreen(foundScreen);
-            }
-            else
-            {
-                foundScreen = "";
-                defaultScreen = Screen.PrimaryScreen;
-            }
->>>>>>> fe9cbb00a4508453f9405ee283b2bff1a3681d22
             Properties.Settings.Default.defDevice = foundScreen;
             Properties.Settings.Default.Save();
         }

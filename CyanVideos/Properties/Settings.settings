@@ -29,20 +29,11 @@
     <Setting Name="volume" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">100</Value>
     </Setting>
-<<<<<<< HEAD
     <Setting Name="logs" Type="System.String" Scope="User">
       <Value Profile="(Default)" />
     </Setting>
     <Setting Name="tags" Type="System.String" Scope="User">
       <Value Profile="(Default)">ITA|-.-|ENG|-.-|KOR|-.-|ESP|-.-|GER|-.-|JAP|-.-|Sub-ENG|-.-|Sub-ITA</Value>
     </Setting>
-=======
-	<Setting Name="Logs" Type="System.String" Scope="User">
-		<Value Profile="(Default)" />
-	</Setting>
-	<Setting Name="tags" Type="System.String" Scope="User">
-		<Value Profile="(Default)" />
-	</Setting>
->>>>>>> fe9cbb00a4508453f9405ee283b2bff1a3681d22
   </Settings>
 </SettingsFile>

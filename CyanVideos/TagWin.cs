@@ -62,10 +62,6 @@ namespace CyanVideos
             {
                 textBox1.Text = "";
                 tags.Add(name);
-<<<<<<< HEAD
-=======
-                PanelResearch.new_tag = true;
->>>>>>> fe9cbb00a4508453f9405ee283b2bff1a3681d22
                 Save();
             }
         }
@@ -82,10 +78,7 @@ namespace CyanVideos
         private void button1_Click(object sender, EventArgs e)
         {
             if (textBox1.Text != "" && !tags.Contains(textBox1.Text)) AddTag(textBox1.Text, true);
-<<<<<<< HEAD
             PanelResearch.new_tag = true;
-=======
->>>>>>> fe9cbb00a4508453f9405ee283b2bff1a3681d22
         }
         private void deleteTag(object sender, EventArgs e)
         {
@@ -101,10 +94,6 @@ namespace CyanVideos
                 }
             }
             Reshape();
-<<<<<<< HEAD
-=======
-            PanelResearch.new_tag = true;
->>>>>>> fe9cbb00a4508453f9405ee283b2bff1a3681d22
             Save();
         }
         private void LoadTags()
@@ -116,17 +105,5 @@ namespace CyanVideos
             Properties.Settings.Default.tags = string.Join("|-.-|", tags);
             Properties.Settings.Default.Save();
         }
-<<<<<<< HEAD
-=======
-
-        private void textBox1_KeyDown(object sender, KeyEventArgs e)
-        {
-            if (e.KeyCode == Keys.Enter)
-            {
-                e.SuppressKeyPress = true;
-                button1_Click(sender, e);
-            }
-        }
->>>>>>> fe9cbb00a4508453f9405ee283b2bff1a3681d22
     }
 }

@@ -16,11 +16,7 @@ namespace CyanVideos
         static public bool new_genre = false;
         static public bool new_role = false;
         static public bool new_tag = true;
-<<<<<<< HEAD
         private Timer timer, only_checked, time;
-=======
-        private Timer timer, timer2, only_checked, time;
->>>>>>> fe9cbb00a4508453f9405ee283b2bff1a3681d22
         public CheckedListBox listbox;
         public CheckedListBox rolebox;
         public CheckedListBox tagbox;
@@ -207,17 +203,7 @@ namespace CyanVideos
                 Enabled = true,
                 Interval = 1000,
             };
-<<<<<<< HEAD
             timer.Tick += CheckGenres_Tags;
-=======
-            timer.Tick += CheckGenres;
-            timer2 = new Timer()
-            {
-                Enabled = true,
-                Interval = 500,
-            };
-            timer2.Tick += CheckTags;
->>>>>>> fe9cbb00a4508453f9405ee283b2bff1a3681d22
             only_checked = new Timer()
             {
                 Enabled = true,
@@ -436,20 +422,7 @@ namespace CyanVideos
                 }
             }
             catch (Exception) { }
-        }
-        private void CheckTags(object sender, EventArgs e)
-        {
-            try
-            {
-                if (new_tag)
-                {
-                    List<string> tags = Properties.Settings.Default.tags.Split(new string[] { "|-.-|" }, System.StringSplitOptions.RemoveEmptyEntries).ToList();
-                    tagbox.Items.Clear();
-                    tagbox.Items.AddRange(tags.ToArray());
-                    new_tag = false;
-                }
-            }
-            catch (Exception) { }
+
         }
 
         int last_checked;
@@ -655,24 +628,6 @@ namespace CyanVideos
             Console.WriteLine();
             foreach (string tag in Tags) Console.Write(tag + ", ");
             Console.WriteLine();
-<<<<<<< HEAD
-=======
-        }
-        public void Save()
-        {
-            string saved = "";
-            saved += searchByName + "|^|";
-            saved += searchByRole + "|^|";
-            saved += (leftDate == 0) ? "" : Convert.ToString(leftDate); saved += "|^|";
-            saved += (rightDate == 1000000000) ? "" : Convert.ToString(rightDate); saved += "|^|";
-            saved += (leftRevenue == 0) ? "" : Convert.ToString(leftRevenue); saved += "|^|";
-            saved += (rightRevenue == 100000000000) ? "" : Convert.ToString(rightRevenue); saved += "|^|";
-            saved += Role + "|^|";
-            foreach (string genre in Genres) saved += genre + "^_^"; saved += "|^|";
-            foreach (string tag in Tags) saved += tag + "^_^"; saved += "|^|";
-            Properties.Settings.Default.savedResearch = saved;
-            Properties.Settings.Default.Save();
->>>>>>> fe9cbb00a4508453f9405ee283b2bff1a3681d22
         }
 
     }

@@ -11,7 +11,6 @@ namespace CyanVideos.MultiMonitorTool
     public class MonitorCollection
     {
         //    API CALLS    ----------------------------------------------------------------------------------------------------------------------
-<<<<<<< HEAD
         public static MonitorCollection getMonitorConfiguration()
         {
             string multimonitorDirectory = Path.Combine(Environment.CurrentDirectory, "MultiMonitorTool");
@@ -61,64 +60,6 @@ namespace CyanVideos.MultiMonitorTool
             monitors.Order();
             monitors.ValidateIds();
             return monitors;
-=======
-        public static MonitorCollection getMonitorConfiguration(string multimonitorDirectory)
-        {
-            try
-            {
-                string multimonitorExe = Path.Combine(multimonitorDirectory, "MultiMonitorTool.exe");
-                string conf_path = Path.Combine(multimonitorDirectory, "multimonitor.cfg");
-                cmdAsync(multimonitorExe, "/SaveConfig \"" + conf_path + "\"");
-                string[] lines = null;
-                for (int i = 0; i < 20; i++)
-                {
-                    if (File.Exists(conf_path) && !SeasonEditor.Action.IsFileLocked(new FileInfo(conf_path)))
-                    {
-                        lines = File.ReadAllLines(conf_path);
-                        for (int j = 0; j < 20; j++)
-                        {
-                            if (!SeasonEditor.Action.IsFileLocked(new FileInfo(conf_path)))
-                            {
-                                File.Delete(conf_path);
-                                Console.WriteLine("Deleting conf file");
-                                break;
-                            }
-                            Thread.Sleep(100);
-                        }
-                        break;
-                    }
-                    Thread.Sleep(100);
-                }
-
-                MonitorCollection monitors = new MonitorCollection();
-                if (lines != null)
-                {
-                    List<string> monitor_gen = new List<string>();
-                    foreach (var line in lines)
-                    {
-                        if (line.StartsWith("["))
-                        {
-                            Monitor.Add(monitor_gen, monitors);
-                            monitor_gen = new List<string>();
-                        }
-                        else
-                        {
-                            monitor_gen.Add(line.Substring(line.IndexOf("=") + 1));
-                        }
-                    }
-                    Monitor.Add(monitor_gen, monitors);
-                }
-                monitors.Order();
-                monitors.ValidateIds();
-                foreach (Monitor m in monitors.GetAll()) m.print();
-                return monitors;
-            }
-            catch 
-            {
-                MessageBox.Show("Error while fetching Monitor configuration");
-                return new MonitorCollection();
-            }
->>>>>>> fe9cbb00a4508453f9405ee283b2bff1a3681d22
         }
         public List<Monitor> GetAll()
         {
@@ -169,7 +110,6 @@ namespace CyanVideos.MultiMonitorTool
                 this.y = y;
             }
 
-<<<<<<< HEAD
             public void print()
             {
                 Console.WriteLine(name);
@@ -183,24 +123,6 @@ namespace CyanVideos.MultiMonitorTool
                 Console.WriteLine("\tDisplay orientation: " + display_orient);
                 Console.WriteLine("\tPosition X: " + x);
                 Console.WriteLine("\tPosition Y: " + y);
-=======
-            public string print()
-            {
-                string output = "";
-                output += name + "\n";
-                output += "\tScreen: " + screen + "\n";
-                output += "\tID: " + id + "\n";
-                output += "\tBits per Pixel: " + bpp + "\n";
-                output += "\tWidth: " + width + "\n";
-                output += "\tHeight: " + height + "\n";
-                output += "\tDisplay flags: " + display_flags + "\n";
-                output += "\tDisplat frequency: " + display_freq + "\n";
-                output += "\tDisplay orientation: " + display_orient + "\n";
-                output += "\tPosition X: " + x + "\n";
-                output += "\tPosition Y: " + y + "\n";
-                Console.WriteLine(output);
-                return output;
->>>>>>> fe9cbb00a4508453f9405ee283b2bff1a3681d22
             }
 
             public static void Add(List<string> monitor_gen, MonitorCollection list_monitors)
@@ -283,11 +205,7 @@ namespace CyanVideos.MultiMonitorTool
                     using (StreamReader reader = process.StandardOutput)
                     {
                         string result = reader.ReadToEnd();
-<<<<<<< HEAD
                         Console.Write(result);
-=======
-                        Console.WriteLine(result);
->>>>>>> fe9cbb00a4508453f9405ee283b2bff1a3681d22
                     }
                 }
             }
