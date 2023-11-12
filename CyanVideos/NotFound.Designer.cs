@@ -41,8 +41,7 @@
             this.label20.Name = "label20";
             this.label20.Size = new System.Drawing.Size(406, 98);
             this.label20.TabIndex = 19;
-            this.label20.Text = "Nome file non trovato.           Provare a rinominarlo oppure tentare una nuova r" +
-    "icerca.";
+            this.label20.Text = "Nome file non trovato.";
             // 
             // button2
             // 
@@ -50,9 +49,9 @@
             this.button2.BackColor = System.Drawing.Color.White;
             this.button2.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
             this.button2.Font = new System.Drawing.Font("Mongolian Baiti", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.button2.Location = new System.Drawing.Point(112, 124);
+            this.button2.Location = new System.Drawing.Point(97, 124);
             this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(207, 23);
+            this.button2.Size = new System.Drawing.Size(237, 23);
             this.button2.TabIndex = 21;
             this.button2.Text = "RICERCA";
             this.button2.TextAlign = System.Drawing.ContentAlignment.TopCenter;

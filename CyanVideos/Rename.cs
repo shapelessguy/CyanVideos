@@ -17,8 +17,9 @@ namespace CyanVideos
         {
             InitializeComponent();
             this.source = source;
-            label1.Text = "La fonte denominata - " + source.tag.name+" -";
-            Text = "Rinomina della cartella: "+source.directory;
+            label1.Text = "Source named - " + source.tag.name+" -";
+            label2.Text = "will be renamed as: ";
+            Text = "Folder renaming: " + source.directory;
         }
 
         private void button1_Click(object sender, EventArgs e)

@@ -2,38 +2,38 @@
 <SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="CyanVideos.Properties" GeneratedClassName="Settings">
   <Profiles />
   <Settings>
-    <Setting Name="Sources" Type="System.String" Scope="User">
-      <Value Profile="(Default)">""</Value>
+    <Setting Name="sources" Type="System.String" Scope="User">
+      <Value Profile="(Default)">F:\Video\TV Series|#|Categorized Series|#|F:\Video\Movies to watch|#|_ TO WATCH _|#|F:\Video\Movies|#|Categorized Movies|#|</Value>
     </Setting>
-    <Setting Name="valore_mostra" Type="System.Int32" Scope="User">
+    <Setting Name="sourcesToShow" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">3</Value>
     </Setting>
     <Setting Name="exclamationsEnabled" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">True</Value>
     </Setting>
-    <Setting Name="grandezza_icon1" Type="System.Int32" Scope="User">
+    <Setting Name="sizeIcon1pan" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">500</Value>
     </Setting>
-    <Setting Name="grandezza_icon2" Type="System.Int32" Scope="User">
+    <Setting Name="sizeIcon2pan" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">500</Value>
     </Setting>
     <Setting Name="defDevice" Type="System.String" Scope="User">
       <Value Profile="(Default)" />
     </Setting>
-    <Setting Name="savedResearch" Type="System.String" Scope="User">
-      <Value Profile="(Default)">""</Value>
-    </Setting>
     <Setting Name="compact" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>
     </Setting>
     <Setting Name="internalPlayer" Type="System.Boolean" Scope="User">
-      <Value Profile="(Default)">False</Value>
+      <Value Profile="(Default)">True</Value>
     </Setting>
     <Setting Name="volume" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">100</Value>
     </Setting>
-    <Setting Name="Logs" Type="System.String" Scope="User">
+    <Setting Name="logs" Type="System.String" Scope="User">
       <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="tags" Type="System.String" Scope="User">
+      <Value Profile="(Default)">ITA|-.-|ENG|-.-|KOR|-.-|ESP|-.-|GER|-.-|JAP|-.-|Sub-ENG|-.-|Sub-ITA</Value>
     </Setting>
   </Settings>
 </SettingsFile>

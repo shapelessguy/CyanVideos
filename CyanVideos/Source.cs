@@ -10,7 +10,7 @@ namespace CyanVideos
     public class Source
     {
         public static bool verbose = false;
-        private List<Iconxx> icons = new List<Iconxx>();
+        public List<Iconxx> icons = new List<Iconxx>();
         public SourceTag tag;
         public string directory;
         public bool series;
@@ -32,9 +32,13 @@ namespace CyanVideos
             try {
                 //if (!Directory.Exists(directory)) return;
                 string[] directories = Directory.GetDirectories(directory);
-                if (extremis_series) directories = Program.GetAllVideos(Directory.GetFiles(directory));
+                if (extremis_series) directories = Program.GetAllVideos(directory);
                 foreach (string dir in Ordering.OrderAlphanumeric(directories))
                 {
+                    if (this.series)
+                    {
+                        if (Program.GetAllVideos(dir, 10).Length == 0) continue;
+                    }
                     icons.Add(new Iconxx(directory, dir, this.series, 0, extremis_series, in_first_panel));
                 }
             }

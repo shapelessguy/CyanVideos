@@ -127,7 +127,13 @@ namespace CyanVideos
             next.MouseLeave += (o, e) => { next.BackgroundImage = Properties.Resources.right; };
             Controls.Add(next);
 
-            Volume = new MyVolume() { AutoSize = false, BackColor = Color.Transparent, Size = new Size(TrackHeight*2, standarsSize1.Height - 5), BackgroundImageLayout = ImageLayout.Stretch, BackgroundImage = Properties.Resources.vol, };
+            Volume = new MyVolume() { 
+                AutoSize = false, 
+                BackColor = Color.Transparent,
+                Size = new Size(TrackHeight*2, standarsSize1.Height - 5), 
+                BackgroundImageLayout = ImageLayout.Stretch, 
+                BackgroundImage = Properties.Resources.vol, 
+            };
             Controls.Add(Volume);
 
             fullScreen = new Label() { AutoSize = false, BackColor = Color.Transparent, Size = standarsSize1, BackgroundImageLayout = ImageLayout.Stretch, BackgroundImage = Properties.Resources.zoom, };
@@ -209,11 +215,22 @@ namespace CyanVideos
         private string GetTime(double time)
         {
             int tot_sec = (int)(time / 1000);
-            string stringa1 = ((int)(tot_sec / 60)).ToString();
+            int tot_min = tot_sec / 60;
+
+            int sec = (tot_sec - (int)(tot_sec / 60) * 60);
+            int min = (tot_min - (int)(tot_min / 60) * 60);
+            int hour = ((int)(tot_sec / 3600));
+
+            string stringa1 = hour.ToString();
             if (stringa1.Length == 1) stringa1 = "0" + stringa1;
-            string stringa2 = (tot_sec - (int)(tot_sec / 60) * 60).ToString();
+
+            string stringa2 = min.ToString();
             if (stringa2.Length == 1) stringa2 = "0" + stringa2;
-            return stringa1 + ":" + stringa2;
+
+            string stringa3 = sec.ToString();
+            if (stringa3.Length == 1) stringa3 = "0" + stringa3;
+
+            return stringa1 + ":" + stringa2 + ":" + stringa3;
         }
         public void RefreshForm(bool rest = false)
         {
@@ -229,7 +246,12 @@ namespace CyanVideos
         {
             toolMenuAudio.DropDownItems.Clear();
             ToolStripMenuItem[] result = Program.win.mediaPanel.Media.GetAudioToolMenu();
-            if(result != null) toolMenuAudio.DropDownItems.AddRange(result);
+
+            if (result != null)
+            {
+                toolMenuAudio.DropDownItems.AddRange(result);
+                // toolMenuAudio.DropDownItems.RemoveAt(0);
+            }
         }
 
         int prev_results = 0;
@@ -239,7 +261,10 @@ namespace CyanVideos
             {
                 toolMenuSub.DropDownItems.Clear();
                 ToolStripMenuItem[] result = Program.win.mediaPanel.Media.GetSubToolMenu();
-                if (result != null) { toolMenuSub.DropDownItems.AddRange(result); prev_results = result.Count(); }
+                if (result != null) { 
+                    toolMenuSub.DropDownItems.AddRange(result); 
+                    prev_results = result.Count(); 
+                }
             }
             else
             {
@@ -251,7 +276,10 @@ namespace CyanVideos
                     }
                 }
                 ToolStripMenuItem[] result = Program.win.mediaPanel.Media.GetSubRestMenu();
-                if (result != null) toolMenuSub.DropDownItems.AddRange(result);
+                if (result != null)
+                {
+                    toolMenuSub.DropDownItems.AddRange(result);
+                }
             }
         }
     }

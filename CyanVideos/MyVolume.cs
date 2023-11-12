@@ -14,25 +14,35 @@ namespace CyanVideos
         bool update = false;
         bool mousePressed = false;
         Label mask;
+        public static string[] vlc_identifiers = new string[] { "VLC media player", "LibVLC" };
         public MyVolume()
         {
             SetVolumeApplication((int)(65535 * ((double)Properties.Settings.Default.volume / 100)));
-            mask = new Label() { BackgroundImage = Properties.Resources.mask, BackgroundImageLayout = ImageLayout.Stretch,};
+            mask = new Label() { 
+                BackgroundImage = Properties.Resources.mask, 
+                BackgroundImageLayout = ImageLayout.Stretch,
+            };
             Timer timer = new Timer() { Enabled = true, Interval = 3, }; timer.Tick += (o, e) => { UpdateVol(); };
             mask.Bounds = new Rectangle(0,0,0,0);
             Controls.Add(mask);
+            MouseClick += (o, e) => { VolClick(); };
             MouseDown += (o, e) => { mousePressed = true; update = true; };
             MouseUp += (o, e) => { mousePressed = false; };
             MouseMove += (o, e) => { if (mousePressed) update = true; };
             mask.MouseDown += (o, e) => { mousePressed = true; update = true; };
-            mask.MouseUp += (o, e) => { mousePressed = false; };
+            mask.MouseUp += (o, e) => { mousePressed = false; update = true; };
             mask.MouseMove += (o, e) => { if (mousePressed) update = true; };
 
 
         }
         int firstPointY = 11;
-        int firstPoint = 19;
+        int firstPoint = 26;
         int rightMargin = 8;
+        bool mute_mode = false;
+        int vol_mark = 0;
+        private void VolClick()
+        {
+        }
         public void UpdateVol(bool forced = false)
         {
             if (Program.win!= null && Program.win.mediaPanel!= null && !Program.win.mediaPanel.onTop) return;
@@ -43,12 +53,33 @@ namespace CyanVideos
                 int pointToClientX = (int)(Properties.Settings.Default.volume * (double)(lastPoint - firstPoint) / 100) + firstPoint;
                 mask.Bounds = new Rectangle(pointToClientX, firstPointY, lastPoint - pointToClientX, Height - 2 * firstPointY+1);
                 SetVolumeApplication(Properties.Settings.Default.volume);
+                vol_mark = Properties.Settings.Default.volume;
             }
             if (update)
             {
                 int value = (int)((double)(PointToClient(MousePosition).X - firstPoint) / (double)(lastPoint - firstPoint) * 100);
                 if (value < 0) value = 0;
                 if (value > 100) value = 100;
+                if (value != 0) vol_mark = value;
+
+                if (value >= -22 && value <= 0)
+                {
+                    if (mousePressed) return;
+                    if (mute_mode)
+                    {
+                        mute_mode = false;
+                        value = vol_mark;
+                    }
+                    else
+                    {
+                        mute_mode = true;
+                        value = 0;
+                    }
+                }
+                else
+                {
+                    mute_mode = false;
+                }
 
                 int pointToClientX = (int)(value * (double)(lastPoint - firstPoint) / 100) + firstPoint;
                 if (value != Properties.Settings.Default.volume)
@@ -82,7 +113,7 @@ namespace CyanVideos
             //uint NewVolumeAllChannels = (((uint)NewVolume & 0x0000ffff) | ((uint)NewVolume << 16));
             //waveOutSetVolume(IntPtr.Zero, NewVolumeAllChannels);
 
-            setVol("VLC media player (LibVLC ", 0);
+            setVol(vlc_identifiers, 0);
         }
         public static void UnMuteApplication()
         {
@@ -92,30 +123,21 @@ namespace CyanVideos
         }
         public static void SetVolumeApplication(int NewVolume)
         {
-            //uint NewVolumeAllChannels = (((uint)NewVolume & 0x0000ffff) | ((uint)NewVolume << 16));
-            //Console.WriteLine(NewVolumeAllChannels);
-            //if(Program.win!= null) waveOutSetVolume(Program.win.Handle, NewVolumeAllChannels);
-            setVol("VLC media player (LibVLC 3.0.11)", NewVolume);
-            //setVol("Mozilla Firefox", NewVolume);
+            setVol(vlc_identifiers, NewVolume);
         }
 
-        static void setVol(string app, int vol)
+        static void setVol(string[] keywords, int vol)
         {
             foreach (string name in EnumerateApplications())
             {
-                //Console.WriteLine("name:" + name);
-                if (name.Contains(app))
+                bool not_found = false;
+                for (int i=0; i < keywords.Length; i++)
                 {
-                    // display mute state & volume level (% of master)
-                    //Console.WriteLine("Mute:" + GetApplicationMute(app));
-                    //Console.WriteLine("Volume:" + GetApplicationVolume(app));
-
-                    // mute the application
-                    //SetApplicationMute(app, true);
-
-                    // set the volume to half of master volume (50%)
-                    //Console.WriteLine("Setting vol to "+vol + "  -  "+name);
-                    SetApplicationVolume(app, vol);
+                    if (!name.Contains(keywords[i])) { not_found = true; break; }
+                }
+                if (!not_found)
+                {
+                    SetApplicationVolume(name, vol);
                 }
             }
         }

@@ -52,6 +52,7 @@ namespace CyanVideos
             this.Keygrip1 = new System.Windows.Forms.TextBox();
             this.Keygrip2 = new System.Windows.Forms.TextBox();
             this.consigliaStrutturaToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.languageTagsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.Menu.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -83,7 +84,9 @@ namespace CyanVideos
             this.mostraToolStripMenuItem,
             this.monitorPredefinitoToolStripMenuItem,
             this.internalPlayer,
-            this.consigliaStrutturaToolStripMenuItem});
+            this.consigliaStrutturaToolStripMenuItem,
+            this.languageTagsToolStripMenuItem
+            });
             this.menu1.Font = new System.Drawing.Font("Showcard Gothic", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.menu1.ForeColor = System.Drawing.Color.White;
             this.menu1.Name = "menu1";
@@ -97,7 +100,6 @@ namespace CyanVideos
             this.add_source.ForeColor = System.Drawing.Color.White;
             this.add_source.Name = "add_source";
             this.add_source.Size = new System.Drawing.Size(293, 24);
-            this.add_source.Text = "Aggiungi fonte film";
             this.add_source.Click += new System.EventHandler(this.AddSource);
             // 
             // addSourceSeries
@@ -106,7 +108,6 @@ namespace CyanVideos
             this.addSourceSeries.ForeColor = System.Drawing.Color.White;
             this.addSourceSeries.Name = "addSourceSeries";
             this.addSourceSeries.Size = new System.Drawing.Size(293, 24);
-            this.addSourceSeries.Text = "Aggiungi fonte serieTV";
             this.addSourceSeries.Click += new System.EventHandler(this.AddSourceSeries);
             // 
             // update_source
@@ -115,7 +116,6 @@ namespace CyanVideos
             this.update_source.ForeColor = System.Drawing.Color.White;
             this.update_source.Name = "update_source";
             this.update_source.Size = new System.Drawing.Size(293, 24);
-            this.update_source.Text = "Aggiorna";
             this.update_source.Click += new System.EventHandler(this.update_source_Click);
             // 
             // visualizzaControversieToolStripMenuItem
@@ -125,7 +125,6 @@ namespace CyanVideos
             this.visualizzaControversieToolStripMenuItem.ForeColor = System.Drawing.Color.White;
             this.visualizzaControversieToolStripMenuItem.Name = "visualizzaControversieToolStripMenuItem";
             this.visualizzaControversieToolStripMenuItem.Size = new System.Drawing.Size(293, 24);
-            this.visualizzaControversieToolStripMenuItem.Text = "Visualizza controversie";
             this.visualizzaControversieToolStripMenuItem.Click += new System.EventHandler(this.Exclamative_Click);
             // 
             // compact
@@ -135,7 +134,6 @@ namespace CyanVideos
             this.compact.ForeColor = System.Drawing.Color.White;
             this.compact.Name = "compact";
             this.compact.Size = new System.Drawing.Size(293, 24);
-            this.compact.Text = "Compatta";
             this.compact.Click += new System.EventHandler(this.compact_Click);
             // 
             // mostraToolStripMenuItem
@@ -148,7 +146,6 @@ namespace CyanVideos
             this.mostraToolStripMenuItem.ForeColor = System.Drawing.Color.White;
             this.mostraToolStripMenuItem.Name = "mostraToolStripMenuItem";
             this.mostraToolStripMenuItem.Size = new System.Drawing.Size(293, 24);
-            this.mostraToolStripMenuItem.Text = "Mostra";
             // 
             // tuttoToolStripMenuItem
             // 
@@ -157,7 +154,6 @@ namespace CyanVideos
             this.tuttoToolStripMenuItem.ForeColor = System.Drawing.Color.White;
             this.tuttoToolStripMenuItem.Name = "tuttoToolStripMenuItem";
             this.tuttoToolStripMenuItem.Size = new System.Drawing.Size(190, 24);
-            this.tuttoToolStripMenuItem.Text = "Tutto";
             this.tuttoToolStripMenuItem.Click += new System.EventHandler(this.ViewAll_Click);
             // 
             // soloFilmToolStripMenuItem
@@ -167,7 +163,6 @@ namespace CyanVideos
             this.soloFilmToolStripMenuItem.ForeColor = System.Drawing.Color.White;
             this.soloFilmToolStripMenuItem.Name = "soloFilmToolStripMenuItem";
             this.soloFilmToolStripMenuItem.Size = new System.Drawing.Size(190, 24);
-            this.soloFilmToolStripMenuItem.Text = "Solo film";
             this.soloFilmToolStripMenuItem.Click += new System.EventHandler(this.Film_Click);
             // 
             // soloSerieTVToolStripMenuItem
@@ -177,7 +172,6 @@ namespace CyanVideos
             this.soloSerieTVToolStripMenuItem.ForeColor = System.Drawing.Color.White;
             this.soloSerieTVToolStripMenuItem.Name = "soloSerieTVToolStripMenuItem";
             this.soloSerieTVToolStripMenuItem.Size = new System.Drawing.Size(190, 24);
-            this.soloSerieTVToolStripMenuItem.Text = "Solo serie TV";
             this.soloSerieTVToolStripMenuItem.Click += new System.EventHandler(this.Series_Click);
             // 
             // monitorPredefinitoToolStripMenuItem
@@ -186,7 +180,6 @@ namespace CyanVideos
             this.monitorPredefinitoToolStripMenuItem.ForeColor = System.Drawing.Color.White;
             this.monitorPredefinitoToolStripMenuItem.Name = "monitorPredefinitoToolStripMenuItem";
             this.monitorPredefinitoToolStripMenuItem.Size = new System.Drawing.Size(293, 24);
-            this.monitorPredefinitoToolStripMenuItem.Text = "Monitor predefinito";
             // 
             // internalPlayer
             // 
@@ -195,7 +188,6 @@ namespace CyanVideos
             this.internalPlayer.ForeColor = System.Drawing.Color.White;
             this.internalPlayer.Name = "internalPlayer";
             this.internalPlayer.Size = new System.Drawing.Size(293, 24);
-            this.internalPlayer.Text = "Lettore interno";
             this.internalPlayer.Click += new System.EventHandler(this.internalPlayer_Click);
             // 
             // Keygrip1
@@ -218,8 +210,15 @@ namespace CyanVideos
             this.consigliaStrutturaToolStripMenuItem.ForeColor = System.Drawing.Color.White;
             this.consigliaStrutturaToolStripMenuItem.Name = "consigliaStrutturaToolStripMenuItem";
             this.consigliaStrutturaToolStripMenuItem.Size = new System.Drawing.Size(293, 24);
-            this.consigliaStrutturaToolStripMenuItem.Text = "Consiglia struttura";
             this.consigliaStrutturaToolStripMenuItem.Click += new System.EventHandler(this.consigliaStrutturaToolStripMenuItem_Click);
+            // 
+            // languageTagsToolStripMenuItem
+            // 
+            this.languageTagsToolStripMenuItem.BackColor = System.Drawing.Color.Black;
+            this.languageTagsToolStripMenuItem.ForeColor = System.Drawing.Color.White;
+            this.languageTagsToolStripMenuItem.Name = "languageTagsToolStripMenuItem";
+            this.languageTagsToolStripMenuItem.Size = new System.Drawing.Size(293, 24);
+            this.languageTagsToolStripMenuItem.Click += new System.EventHandler(this.languageTagsToolStripMenuItem_Click);
             // 
             // Window
             // 
@@ -237,6 +236,7 @@ namespace CyanVideos
             this.Text = "Form1";
             this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
             this.Load += new System.EventHandler(this.Window_Load);
+            RefreshMenu();
             this.Menu.ResumeLayout(false);
             this.Menu.PerformLayout();
             this.ResumeLayout(false);
@@ -262,6 +262,7 @@ namespace CyanVideos
         private System.Windows.Forms.ToolStripMenuItem compact;
         private System.Windows.Forms.ToolStripMenuItem internalPlayer;
         private System.Windows.Forms.ToolStripMenuItem consigliaStrutturaToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem languageTagsToolStripMenuItem;
     }
 }
 

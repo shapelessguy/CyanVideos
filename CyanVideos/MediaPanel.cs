@@ -37,11 +37,11 @@ namespace CyanVideos
         public Label time2;
         public Panel MediaControls;
 
-        public PlayerX Media;
+        public Player Media;
         private void InitializeComponents()
         {
             Console.WriteLine("Creating a new MediaPanel");
-            Media = new PlayerX();
+            Media = new Player();
             Controls.Add(Media);
 
             MediaControls = new Panel() { BackColor = Color.Black, AutoSize = false, Bounds = new Rectangle(-1, -1, 1, 1), };
@@ -50,10 +50,10 @@ namespace CyanVideos
             time1 = new Label()
             {
                 AutoSize = false,
-                Size = new Size(50, 20),
+                Size = new Size(100, 20),
                 BackColor = Color.Transparent,
                 ForeColor = Color.White,
-                Text = "00:00",
+                Text = "00:00:00",
                 TextAlign = ContentAlignment.TopLeft,
                 Font = new Font("Arial", 10, FontStyle.Bold),
             };
@@ -61,17 +61,15 @@ namespace CyanVideos
             time2 = new Label()
             {
                 AutoSize = false,
-                Size = new Size(50, 20),
+                Size = new Size(100, 20),
                 BackColor = Color.Transparent,
                 ForeColor = Color.White,
-                Text = "00:00",
+                Text = "00:00:00",
                 TextAlign = ContentAlignment.TopRight,
                 Font = new Font("Arial", 10, FontStyle.Bold),
             };
             MediaControls.Controls.Add(time2);
             Console.WriteLine("new MediaPanel created");
-            //Timer updateTrackbar = new Timer() { Enabled = true, Interval = 1000 };
-            // updateTrackbar.Tick += (o, e) => { trackbar.Refresh(); this.Invalidate(); updateTrackbar.Dispose(); };
         }
 
         int hideInterval = 10;
@@ -81,7 +79,10 @@ namespace CyanVideos
             BackColor = Color.Black;
             timerHide = new Timer() { Enabled = true, Interval = hideInterval, };
             timerHide.Tick += HidingBar;
-            Header = new Label() { TextAlign = ContentAlignment.BottomCenter, Font = new Font("Algerian", 24, FontStyle.Bold), ForeColor = Color.White, Location = new Point(10000, 100000)};
+            Header = new Label() { 
+                TextAlign = ContentAlignment.BottomCenter, 
+                Font = new Font("Algerian", 24, FontStyle.Bold), 
+                ForeColor = Color.White, Location = new Point(10000, 100000)};
             Controls.Add(Header);
 
             trackbar = new TrackBar() { AutoSize = false, Location = new Point(0, 0), Maximum = 1000, TickFrequency = 100, BackColor = Color.Black};
@@ -103,9 +104,6 @@ namespace CyanVideos
             toolbar.Location = new Point(100, 100);
 
             trackbar.Visible = true;
-            //toolbar.Bounds = new Rectangle(-3000, -3000, 1, 1);
-            //time1.Bounds = new Rectangle(-3000, -3000, 1, 1);
-            //time2.Bounds = new Rectangle(-3000, -3000, 1, 1);
         }
         
 
@@ -170,6 +168,8 @@ namespace CyanVideos
             if(onlyTitle || null_indexHide) indexHide = 0;
             toolbar.BringToFront();
             resizeInd = 0;
+            time1.BringToFront();
+            time2.BringToFront();
         }
 
         Rectangle lastBounds;
@@ -186,7 +186,7 @@ namespace CyanVideos
             if (!onTop) return;
             if (fullscreen)
             {
-                newLocation = new Point(0, act_screen.Bounds.Height - MyToolBar.TrackHeight - topMargin - 2 * trackbarDim);
+                newLocation = new Point(0, act_screen.Bounds.Height - MyToolBar.TrackHeight - topMargin - 2 * trackbarDim + 10);
                 newSize = new Size(Width, Height - newLocation.Y);
                 newTrackBounds = new Rectangle(0, 0, act_screen.Bounds.Width, trackbarDim);
                 int minus = (act_screen.Bounds.Width - dim) / 2;
@@ -194,7 +194,7 @@ namespace CyanVideos
             }
             else
             {
-                newLocation = new Point(0, Height - MyToolBar.TrackHeight - topMargin - 2 * trackbarDim);
+                newLocation = new Point(0, Height - MyToolBar.TrackHeight - topMargin - 2 * trackbarDim + 10);
                 newSize = new Size(Width, Height - newLocation.Y);
                 newTrackBounds = new Rectangle(50, 0, Width - 100, trackbarDim);
                 int minus = (Width - 100 - dim) / 2;
@@ -208,8 +208,8 @@ namespace CyanVideos
             MediaControls.Size = newSize;
             trackbar.Bounds = newTrackBounds;
             toolbar.Bounds = newToolBounds;
-            Program.win.mediaPanel.time1.Location = new Point(trackbar.Location.X + 10, trackbar.Height);
-            Program.win.mediaPanel.time2.Location = new Point(trackbar.Location.X + trackbar.Width - Program.win.mediaPanel.time2.Width - 19, trackbar.Height);
+            Program.win.mediaPanel.time1.Location = new Point(trackbar.Location.X + 15, trackbar.Height - 5);
+            Program.win.mediaPanel.time2.Location = new Point(trackbar.Location.X + trackbar.Width - Program.win.mediaPanel.time2.Width - 20, trackbar.Height - 5);
             lastBounds = MediaControls.Bounds;
 
             toolbar.ResizeButtons();
@@ -294,7 +294,6 @@ namespace CyanVideos
         private static extern bool UnregisterHotKey(IntPtr hWnd, int id);
         public void ToFront()
         {
-            Console.WriteLine("MediaPanel To Front!");
             RegisterHotKey(Program.win.Handle, 100, 0, Keys.MediaPlayPause.GetHashCode());
             RegisterHotKey(Program.win.Handle, 101, 0, Keys.MediaNextTrack.GetHashCode());
             RegisterHotKey(Program.win.Handle, 102, 0, Keys.MediaPreviousTrack.GetHashCode());
@@ -376,8 +375,8 @@ namespace CyanVideos
             UnregisterHotKey(Program.win.Handle, 102);
             onTop = false;
             UpdateTrackBar(0);
-            time1.Text = "00:00";
-            time2.Text = "00:00";
+            time1.Text = "00:00:00";
+            time2.Text = "00:00:00";
             Media.Stop();
         }
         public void ToBack()
@@ -393,7 +392,7 @@ namespace CyanVideos
         {
             if (!Program.VLC_Installed)
             {
-                MessageBox.Show("Copiare libvlc (libreria di VLC) all'interno della cartella d'installazione per utilizzare il lettore interno!");
+                MessageBox.Show("No libvlc found in the installation folder. Please add it to that folder to use the internal player!");
                 return;
             }
             try

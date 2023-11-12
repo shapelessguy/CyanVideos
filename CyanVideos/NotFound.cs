@@ -20,6 +20,9 @@ namespace CyanVideos
 
             active = true;
             InitializeComponent();
+            label20.Text = "File name not found.           Try either to rename it or to search again.";
+            button2.Text = "SEARCH ON IMDB";
+            Text = "Name not found";
             this.LostFocus += Exit;
             this.FormClosing += Exit;
         }
@@ -36,7 +39,7 @@ namespace CyanVideos
 
         private void button2_Click(object sender, EventArgs e)
         {
-            Console.WriteLine("Trying to remove file: "+icon.infopath);
+            Console.WriteLine("Trying to remove file: " + icon.infopath);
             if (icon.infopath != "") if (System.IO.File.Exists(icon.infopath)) try {
                         System.IO.File.Delete(icon.infopath);
                         //icon.Initialize();

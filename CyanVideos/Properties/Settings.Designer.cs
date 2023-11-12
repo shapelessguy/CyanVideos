@@ -12,7 +12,7 @@ namespace CyanVideos.Properties {
     
     
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "17.0.3.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "17.4.0.0")]
     internal sealed partial class Settings : global::System.Configuration.ApplicationSettingsBase {
         
         private static Settings defaultInstance = ((Settings)(global::System.Configuration.ApplicationSettingsBase.Synchronized(new Settings())));
@@ -25,25 +25,26 @@ namespace CyanVideos.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("\"\"")]
-        public string Sources {
+        [global::System.Configuration.DefaultSettingValueAttribute("F:\\Video\\TV Series|#|Categorized Series|#|F:\\Video\\Movies to watch|#|_ TO WATCH _" +
+            "|#|F:\\Video\\Movies|#|Categorized Movies|#|")]
+        public string sources {
             get {
-                return ((string)(this["Sources"]));
+                return ((string)(this["sources"]));
             }
             set {
-                this["Sources"] = value;
+                this["sources"] = value;
             }
         }
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("3")]
-        public int valore_mostra {
+        public int sourcesToShow {
             get {
-                return ((int)(this["valore_mostra"]));
+                return ((int)(this["sourcesToShow"]));
             }
             set {
-                this["valore_mostra"] = value;
+                this["sourcesToShow"] = value;
             }
         }
         
@@ -62,24 +63,24 @@ namespace CyanVideos.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("500")]
-        public int grandezza_icon1 {
+        public int sizeIcon1pan {
             get {
-                return ((int)(this["grandezza_icon1"]));
+                return ((int)(this["sizeIcon1pan"]));
             }
             set {
-                this["grandezza_icon1"] = value;
+                this["sizeIcon1pan"] = value;
             }
         }
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("500")]
-        public int grandezza_icon2 {
+        public int sizeIcon2pan {
             get {
-                return ((int)(this["grandezza_icon2"]));
+                return ((int)(this["sizeIcon2pan"]));
             }
             set {
-                this["grandezza_icon2"] = value;
+                this["sizeIcon2pan"] = value;
             }
         }
         
@@ -97,18 +98,6 @@ namespace CyanVideos.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("\"\"")]
-        public string savedResearch {
-            get {
-                return ((string)(this["savedResearch"]));
-            }
-            set {
-                this["savedResearch"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("False")]
         public bool compact {
             get {
@@ -121,7 +110,7 @@ namespace CyanVideos.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
         public bool internalPlayer {
             get {
                 return ((bool)(this["internalPlayer"]));
@@ -146,12 +135,24 @@ namespace CyanVideos.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("")]
-        public string Logs {
+        public string logs {
             get {
-                return ((string)(this["Logs"]));
+                return ((string)(this["logs"]));
             }
             set {
-                this["Logs"] = value;
+                this["logs"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("ITA|-.-|ENG|-.-|KOR|-.-|ESP|-.-|GER|-.-|JAP|-.-|Sub-ENG|-.-|Sub-ITA")]
+        public string tags {
+            get {
+                return ((string)(this["tags"]));
+            }
+            set {
+                this["tags"] = value;
             }
         }
     }
