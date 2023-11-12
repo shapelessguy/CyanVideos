@@ -362,5 +362,5 @@ MigrationBackup/
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
 
-*libvlc-win-x64/
-*libvlc-win-x86/
+libvlc-win-x64/
+libvlc-win-x86/
