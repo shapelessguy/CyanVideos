@@ -37,11 +37,17 @@
             // 
             // panel1
             // 
+<<<<<<< HEAD
             this.panel1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.panel1.AutoScroll = true;
             this.panel1.BackColor = System.Drawing.Color.Black;
             this.panel1.Location = new System.Drawing.Point(193, 33);
+=======
+            this.panel1.AutoScroll = true;
+            this.panel1.BackColor = System.Drawing.Color.Black;
+            this.panel1.Location = new System.Drawing.Point(190, 30);
+>>>>>>> fe9cbb00a4508453f9405ee283b2bff1a3681d22
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(201, 213);
             this.panel1.TabIndex = 0;
@@ -67,6 +73,10 @@
             this.textBox1.Size = new System.Drawing.Size(122, 21);
             this.textBox1.TabIndex = 2;
             this.textBox1.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+<<<<<<< HEAD
+=======
+            this.textBox1.KeyDown += new System.Windows.Forms.KeyEventHandler(this.textBox1_KeyDown);
+>>>>>>> fe9cbb00a4508453f9405ee283b2bff1a3681d22
             // 
             // label1
             // 
@@ -89,6 +99,7 @@
             this.Controls.Add(this.textBox1);
             this.Controls.Add(this.button1);
             this.Controls.Add(this.panel1);
+<<<<<<< HEAD
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
@@ -98,6 +109,15 @@
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Tag Manager";
             this.TopMost = true;
+=======
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+            this.MaximizeBox = false;
+            this.MaximumSize = new System.Drawing.Size(419, 294);
+            this.MinimumSize = new System.Drawing.Size(419, 294);
+            this.Name = "TagWin";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
+            this.Text = "Tag Manager";
+>>>>>>> fe9cbb00a4508453f9405ee283b2bff1a3681d22
             this.ResumeLayout(false);
             this.PerformLayout();
 

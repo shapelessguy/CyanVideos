@@ -155,5 +155,17 @@ namespace CyanVideos.Properties {
                 this["tags"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string tags {
+            get {
+                return ((string)(this["tags"]));
+            }
+            set {
+                this["tags"] = value;
+            }
+        }
     }
 }
